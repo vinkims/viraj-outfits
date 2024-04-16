@@ -1,4 +1,4 @@
-package ke.kigen.api.models.Status;
+package ke.kigen.api.models.status;
 
 import java.io.Serializable;
 

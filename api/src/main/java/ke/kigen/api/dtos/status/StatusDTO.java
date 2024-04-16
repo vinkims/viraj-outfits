@@ -1,6 +1,6 @@
 package ke.kigen.api.dtos.status;
 
-import ke.kigen.api.models.Status.EStatus;
+import ke.kigen.api.models.status.EStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
