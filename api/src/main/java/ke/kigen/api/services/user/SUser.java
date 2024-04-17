@@ -21,7 +21,7 @@ import ke.kigen.api.models.status.EStatus;
 import ke.kigen.api.models.user.EUser;
 import ke.kigen.api.repositories.user.UserDAO;
 import ke.kigen.api.services.role.SRole;
-import ke.kigen.api.services.status.IStatus;
+import ke.kigen.api.services.status.SStatus;
 import ke.kigen.api.specifications.SpecBuilder;
 import ke.kigen.api.specifications.SpecFactory;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +30,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SUser implements IUser {
 
-    private final IStatus sStatus;
-
     private final MainConfig mainConfig;
 
     private final SpecFactory specFactory;
 
     private final SRole sRole;
+
+    private final SStatus sStatus;
 
     private final UserDAO userDAO;
     

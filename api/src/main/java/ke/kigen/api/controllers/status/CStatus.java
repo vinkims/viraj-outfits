@@ -23,7 +23,7 @@ import ke.kigen.api.dtos.status.StatusDTO;
 import ke.kigen.api.models.status.EStatus;
 import ke.kigen.api.responses.SuccessPaginatedResponse;
 import ke.kigen.api.responses.SuccessResponse;
-import ke.kigen.api.services.status.IStatus;
+import ke.kigen.api.services.status.SStatus;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -31,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CStatus {
     
-    private final IStatus sStatus;
+    private final SStatus sStatus;
 
     @PostMapping(path = "", consumes = "application/json", produces = "application/json")
     public ResponseEntity<SuccessResponse> createStatus(@Valid @RequestBody StatusDTO statusDTO) 

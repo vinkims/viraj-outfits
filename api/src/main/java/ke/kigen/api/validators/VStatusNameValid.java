@@ -5,14 +5,14 @@ import org.springframework.stereotype.Component;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import ke.kigen.api.annotations.IsStatusNameValid;
-import ke.kigen.api.services.status.IStatus;
+import ke.kigen.api.services.status.SStatus;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class VStatusNameValid implements ConstraintValidator<IsStatusNameValid, String> {
     
-    private final IStatus sStatus;
+    private final SStatus sStatus;
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext arg1) {
