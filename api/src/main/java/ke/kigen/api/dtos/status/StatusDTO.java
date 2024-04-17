@@ -1,5 +1,6 @@
 package ke.kigen.api.dtos.status;
 
+import ke.kigen.api.annotations.IsStatusNameValid;
 import ke.kigen.api.models.status.EStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ public class StatusDTO {
     
     private Integer id;
 
+    @IsStatusNameValid
     private String name;
 
     private String description;

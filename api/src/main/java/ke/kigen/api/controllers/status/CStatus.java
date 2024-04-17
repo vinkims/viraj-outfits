@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import ke.kigen.api.dtos.general.PageDTO;
 import ke.kigen.api.dtos.status.StatusDTO;
 import ke.kigen.api.models.status.EStatus;
@@ -33,7 +34,7 @@ public class CStatus {
     private final IStatus sStatus;
 
     @PostMapping(path = "", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<SuccessResponse> createStatus(@RequestBody StatusDTO statusDTO) 
+    public ResponseEntity<SuccessResponse> createStatus(@Valid @RequestBody StatusDTO statusDTO) 
             throws URISyntaxException {
 
         EStatus status = sStatus.create(statusDTO);
@@ -70,7 +71,7 @@ public class CStatus {
     }
 
     @PatchMapping(path = "/{statusId}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<SuccessResponse> updateStatus(@PathVariable Integer statusId, @RequestBody StatusDTO statusDTO) {
+    public ResponseEntity<SuccessResponse> updateStatus(@PathVariable Integer statusId, @Valid @RequestBody StatusDTO statusDTO) {
 
         EStatus status = sStatus.update(statusId, statusDTO);
 
