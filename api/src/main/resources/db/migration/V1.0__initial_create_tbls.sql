@@ -179,3 +179,20 @@ CREATE TABLE IF NOT EXISTS order_items (
     "subtotal" NUMERIC(11, 4) DEFAULT 0,
     PRIMARY KEY("order_id", "item_id")
 );
+
+-- permissions
+CREATE TABLE IF NOT EXISTS permissions (
+    "id" SMALLSERIAL PRIMARY KEY,
+    "created_on" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    "updated_on" TIMESTAMPTZ,
+    "name" VARCHAR(50),
+    "method" VARCHAR(10),
+    "resource" VARCHAR(100)
+);
+
+-- role_permissions
+CREATE TABLE IF NOT EXISTS role_permissions (
+    "role_id" SMALLINT REFERENCES roles("id") ON DELETE CASCADE,
+    "permission_id" SMALLINT REFERENCES permissions("id") ON DELETE CASCADE,
+    PRIMARY KEY("role_id", "permission_id")
+);
