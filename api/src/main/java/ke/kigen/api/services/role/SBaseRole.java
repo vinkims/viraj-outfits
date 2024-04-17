@@ -15,6 +15,10 @@ public class SBaseRole {
     
     protected final RoleDAO roleDAO;
 
+    public SBaseRole() {
+        this.roleDAO = null;
+    }
+
     protected Optional<ERole> getById(Integer roleId) {
         return roleDAO.findById(roleId);
     }
