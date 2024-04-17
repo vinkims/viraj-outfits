@@ -5,14 +5,14 @@ import org.springframework.stereotype.Component;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import ke.kigen.api.annotations.IsRoleNameValid;
-import ke.kigen.api.services.role.IRole;
+import ke.kigen.api.services.role.SRole;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class VRoleNameValid implements ConstraintValidator<IsRoleNameValid, String> {
     
-    private final IRole sRole;
+    private final SRole sRole;
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext arg1) {

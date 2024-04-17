@@ -22,7 +22,7 @@ import ke.kigen.api.dtos.role.RoleDTO;
 import ke.kigen.api.models.role.ERole;
 import ke.kigen.api.responses.SuccessPaginatedResponse;
 import ke.kigen.api.responses.SuccessResponse;
-import ke.kigen.api.services.role.IRole;
+import ke.kigen.api.services.role.SRole;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -30,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CRole {
     
-    private final IRole sRole;
+    private final SRole sRole;
 
     @PostMapping(path = "", consumes = "application/json", produces = "application/json")
     public ResponseEntity<SuccessResponse> createRole(@Valid @RequestBody RoleDTO roleDTO) 
