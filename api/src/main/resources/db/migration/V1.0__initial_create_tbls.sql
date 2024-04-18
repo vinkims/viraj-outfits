@@ -36,10 +36,9 @@ CREATE TABLE IF NOT EXISTS contact_types (
 
 -- contacts
 CREATE TABLE IF NOT EXISTS contacts (
-    "id" SERIAL PRIMARY KEY,
     "user_id" INTEGER REFERENCES users("id") ON DELETE CASCADE,
     "contact_type_id" SMALLINT REFERENCES contact_types("id") ON DELETE SET NULL,
-    "value" VARCHAR(100) NOT NULL UNIQUE
+    "value" VARCHAR(100) PRIMARY KEY NOT NULL UNIQUE
 );
 
 -- customers
