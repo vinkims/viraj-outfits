@@ -2,6 +2,7 @@ package ke.kigen.api.models.user;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -13,6 +14,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import ke.kigen.api.models.contacts.EContact;
 import ke.kigen.api.models.role.ERole;
 import ke.kigen.api.models.status.EStatus;
 import lombok.Data;
@@ -24,6 +27,9 @@ import lombok.NoArgsConstructor;
 public class EUser implements Serializable {
     
     private static final long serialVersionUID = 1L;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<EContact> contacts;
 
     @Column(name = "created_on")
     private LocalDateTime createdOn;

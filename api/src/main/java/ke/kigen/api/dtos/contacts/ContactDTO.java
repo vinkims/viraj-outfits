@@ -1,11 +1,13 @@
 package ke.kigen.api.dtos.contacts;
 
+import ke.kigen.api.annotations.IsContactValid;
 import ke.kigen.api.models.contacts.EContact;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@IsContactValid
 public class ContactDTO {
     
     private ContactTypeDTO contactType;

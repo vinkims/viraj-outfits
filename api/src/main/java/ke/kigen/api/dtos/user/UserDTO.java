@@ -1,9 +1,14 @@
 package ke.kigen.api.dtos.user;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.validation.Valid;
+import ke.kigen.api.dtos.contacts.ContactDTO;
 import ke.kigen.api.dtos.role.RoleDTO;
 import ke.kigen.api.dtos.status.StatusDTO;
+import ke.kigen.api.models.contacts.EContact;
 import ke.kigen.api.models.user.EUser;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +24,8 @@ public class UserDTO {
     private String middleName;
 
     private String lastName;
+
+    private List<@Valid ContactDTO> contacts;
 
     private String password;
 
@@ -37,6 +44,7 @@ public class UserDTO {
     private Integer statusId;
 
     public UserDTO(EUser user) {
+        setContactData(user.getContacts());
         setCreatedOn(user.getCreatedOn());
         setFirstName(user.getFirstName());
         setId(user.getId());
@@ -50,5 +58,15 @@ public class UserDTO {
             setStatus(new StatusDTO(user.getStatus()));
         }
         setUpdatedOn(user.getUpdatedOn());
+    }
+
+    private void setContactData(List<EContact> contactList) {
+        if (contactList == null || contactList.isEmpty()) {
+            return;
+        }
+        contacts = new ArrayList<>();
+        for (EContact contact : contactList) {
+            contacts.add(new ContactDTO(contact));
+        }
     }
 }
