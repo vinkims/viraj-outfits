@@ -2,6 +2,7 @@ package ke.kigen.api.services.user;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
 
@@ -24,13 +25,14 @@ public class SUserUpdate extends SBaseUser implements IUserUpdate {
 
             if (fieldValue != null) {
                 fieldValue = fieldValue.getClass().equals(String.class) ? ((String) fieldValue).trim() : fieldValue;
+                EUser.class.getMethod("set" + field, fieldValue.getClass()).invoke(user, fieldValue);
             }
-            EUser.class.getMethod("set" + field, fieldValue.getClass()).invoke(user, fieldValue);
         }
 
         setContacts(user, userDTO.getContacts());
         setRole(user, userDTO.getRoleId());
         setStatus(user, userDTO.getStatusId());
+        user.setUpdatedOn(LocalDateTime.now());
 
         save(user);
         return user;

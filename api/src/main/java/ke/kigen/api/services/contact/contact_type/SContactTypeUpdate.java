@@ -24,8 +24,8 @@ public class SContactTypeUpdate extends SBaseContactType implements IContactType
 
             if (fieldValue != null) {
                 fieldValue = fieldValue.getClass().equals(String.class) ? ((String) fieldValue).trim() : fieldValue;
+                EContactType.class.getMethod("set" + field, fieldValue.getClass()).invoke(contactType, fieldValue);
             }
-            EContactType.class.getMethod("set" + field, fieldValue.getClass()).invoke(contactType, fieldValue);
         }
 
         save(contactType);
