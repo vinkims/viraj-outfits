@@ -16,7 +16,8 @@ INSERT INTO roles("id", "name", "description")
 VALUES
     (1, 'system-admin','System administrator'),
     (2, 'admin', 'store administrator'),
-    (3, 'attendant', 'store attendant');
+    (3, 'attendant', 'store attendant'),
+    (4, 'api-client', 'api client');
 
 alter sequence IF EXISTS roles_id_seq restart with 4;
 
@@ -38,8 +39,9 @@ alter sequence IF EXISTS categories_id_seq restart with 4;
 INSERT INTO payment_channels("id", "name", "description")
 VALUES
     (1, 'cash', 'Cash payments'),
-    (2, 'mobile_money', 'Mobile money payments'),
-    (3, 'bank', 'Bank payments');
+    (2, 'mpesa', 'Mpesa direct deposit'),
+    (3, 'lnmo', 'Lipa na Mpesa Online(STK push)'),
+    (4, 'bank', 'Bank payments');
 
 alter sequence IF EXISTS payment_channels_id_seq restart with 4;
 
