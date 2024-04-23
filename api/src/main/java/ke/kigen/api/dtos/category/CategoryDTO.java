@@ -1,5 +1,6 @@
 package ke.kigen.api.dtos.category;
 
+import ke.kigen.api.annotations.IsCategoryNameValid;
 import ke.kigen.api.models.category.ECategory;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ public class CategoryDTO {
     
     private Integer id;
 
+    @IsCategoryNameValid
     private String name;
 
     private String description;
