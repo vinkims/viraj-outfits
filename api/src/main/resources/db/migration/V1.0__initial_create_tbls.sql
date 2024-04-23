@@ -136,20 +136,6 @@ CREATE TABLE IF NOT EXISTS transactions (
     "status_id" SMALLINT REFERENCES statuses("id") ON DELETE SET NULL
 );
 
--- payments
-CREATE TABLE IF NOT EXISTS payments (
-    "id" SERIAL PRIMARY KEY,
-    "created_on" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    "updated_on" TIMESTAMPTZ,
-    "external_id" VARCHAR UNIQUE,
-    "amount" NUMERIC(11, 4) DEFAULT 0,
-    "description" VARCHAR(200),
-    "reference" VARCHAR(150),
-    "transaction_id" INTEGER REFERENCES transactions("id") ON DELETE SET NULL,
-    "order_id" INTEGER REFERENCES orders("id") ON DELETE SET NULL,
-    "status_id" SMALLINT REFERENCES statuses("id") ON DELETE SET NULL
-);
-
 -- order_types
 CREATE TABLE IF NOT EXISTS order_types (
     "id" SMALLSERIAL PRIMARY KEY,
@@ -166,6 +152,20 @@ CREATE TABLE IF NOT EXISTS orders (
     "total_amount" NUMERIC(11, 4) DEFAULT 0,
     "customer_id" INTEGER REFERENCES customers("id") ON DELETE SET NULL,
     "user_id" INTEGER REFERENCES users("id") ON DELETE SET NULL,
+    "status_id" SMALLINT REFERENCES statuses("id") ON DELETE SET NULL
+);
+
+-- payments
+CREATE TABLE IF NOT EXISTS payments (
+    "id" SERIAL PRIMARY KEY,
+    "created_on" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    "updated_on" TIMESTAMPTZ,
+    "external_id" VARCHAR UNIQUE,
+    "amount" NUMERIC(11, 4) DEFAULT 0,
+    "description" VARCHAR(200),
+    "reference" VARCHAR(150),
+    "transaction_id" INTEGER REFERENCES transactions("id") ON DELETE SET NULL,
+    "order_id" INTEGER REFERENCES orders("id") ON DELETE SET NULL,
     "status_id" SMALLINT REFERENCES statuses("id") ON DELETE SET NULL
 );
 

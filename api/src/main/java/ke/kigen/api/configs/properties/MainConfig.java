@@ -1,6 +1,7 @@
 package ke.kigen.api.configs.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 import ke.kigen.api.configs.properties.admin.AdminConfig;
 import ke.kigen.api.configs.properties.contact.ContactConfig;
@@ -11,6 +12,7 @@ import ke.kigen.api.configs.properties.status.StatusConfig;
 import ke.kigen.api.configs.properties.user.UserConfig;
 import lombok.Data;
 
+@Component
 @ConfigurationProperties(prefix = "main")
 @Data
 public class MainConfig {

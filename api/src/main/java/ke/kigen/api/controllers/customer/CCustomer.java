@@ -58,7 +58,7 @@ public class CCustomer {
                 CustomerDTO.class, ECustomer.class));
     }
 
-    @GetMapping(path = "{/customerId}", produces = "application/json")
+    @GetMapping(path = "/{customerId}", produces = "application/json")
     public ResponseEntity<SuccessResponse> getCustomer(@PathVariable Integer customerId) {
 
         ECustomer customer = sCustomer.getById(customerId, true);
