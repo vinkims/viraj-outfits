@@ -22,11 +22,13 @@ public class SRoleListing extends SBaseRole implements IRoleListing {
     private final SpecFactory specFactory;
 
     @Override
+    @SuppressWarnings("unchecked")
     public Specification<ERole> buildFilterSpec(String searchQuery) {
 
-        SpecBuilder<ERole> specBuilder = new SpecBuilder();
+        SpecBuilder<ERole> specBuilder = new SpecBuilder<>();
 
-        specBuilder = (SpecBuilder<ERole>) specFactory.generateSpecification(searchQuery, specBuilder, ALLOWED_FIELDS);
+        specBuilder = (SpecBuilder<ERole>) specFactory.generateSpecification(
+            searchQuery, specBuilder, ALLOWED_FIELDS);
 
         return specBuilder.build();
     }

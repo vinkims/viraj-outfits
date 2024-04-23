@@ -22,11 +22,13 @@ public class SContactTypeListing extends SBaseContactType implements IContactTyp
     private final SpecFactory specFactory;
 
     @Override
+    @SuppressWarnings("unchecked")
     public Specification<EContactType> buildFilterSpec(String searchQuery) {
 
-        SpecBuilder<EContactType> specBuilder = new SpecBuilder();
+        SpecBuilder<EContactType> specBuilder = new SpecBuilder<>();
 
-        specBuilder = (SpecBuilder<EContactType>) specFactory.generateSpecification(searchQuery, specBuilder, ALLOWED_FIELDS);
+        specBuilder = (SpecBuilder<EContactType>) specFactory.generateSpecification(
+            searchQuery, specBuilder, ALLOWED_FIELDS);
 
         return specBuilder.build();
     }

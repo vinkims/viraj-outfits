@@ -22,12 +22,13 @@ public class SCategoryListing extends SBaseCategory implements ICategoryListing 
     private final SpecFactory specFactory;
 
     @Override
+    @SuppressWarnings("unchecked")
     public Specification<ECategory> buildFilterSpec(String searchQuery) {
 
-        SpecBuilder<ECategory> specBuilder = new SpecBuilder();
+        SpecBuilder<ECategory> specBuilder = new SpecBuilder<>();
 
-        specBuilder = (SpecBuilder<ECategory>) specFactory.generateSpecification(searchQuery, 
-            specBuilder, ALLOWED_FIELDS);
+        specBuilder = (SpecBuilder<ECategory>) specFactory.generateSpecification(
+            searchQuery, specBuilder, ALLOWED_FIELDS);
 
         return specBuilder.build();
     }

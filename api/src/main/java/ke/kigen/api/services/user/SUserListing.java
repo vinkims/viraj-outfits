@@ -22,12 +22,13 @@ public class SUserListing extends SBaseUser implements IUserListing {
     private final SpecFactory specFactory;
     
     @Override
+    @SuppressWarnings("unchecked")
     public Specification<EUser> buildFilterSpec(String searchQuery) {
 
-        SpecBuilder<EUser> specBuilder = new SpecBuilder();
+        SpecBuilder<EUser> specBuilder = new SpecBuilder<>();
 
-        specBuilder = (SpecBuilder<EUser>) specFactory.generateSpecification(searchQuery, 
-            specBuilder, ALLOWED_FIELDS);
+        specBuilder = (SpecBuilder<EUser>) specFactory.generateSpecification(
+            searchQuery, specBuilder, ALLOWED_FIELDS);
 
         return specBuilder.build();
     }

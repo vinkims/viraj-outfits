@@ -1,6 +1,5 @@
 package ke.kigen.api.utils;
 
-import java.security.SignatureException;
 import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
@@ -52,7 +51,7 @@ public class JwtUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        } catch (SignatureException e) {
+        } catch (Exception e) {
             log.error("\n[LOCATION]-JwtUtil.extractAllClaims:\n[CLASS]{}\n[MSG]{}", e.getClass(), e.getLocalizedMessage());
             throw new AuthException("Invalid token provided");
         }

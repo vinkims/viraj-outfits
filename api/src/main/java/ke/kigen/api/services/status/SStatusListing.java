@@ -22,11 +22,13 @@ public class SStatusListing extends SBaseStatus implements IStatusListing {
     private final SpecFactory specFactory;
     
     @Override
+    @SuppressWarnings("unchecked")
     public Specification<EStatus> buildFilterSpec(String searchQuery) {
 
-        SpecBuilder<EStatus> specBuilder = new SpecBuilder();
+        SpecBuilder<EStatus> specBuilder = new SpecBuilder<>();
 
-        specBuilder = (SpecBuilder<EStatus>) specFactory.generateSpecification(searchQuery, specBuilder, ALLOWED_FIELDS);
+        specBuilder = (SpecBuilder<EStatus>) specFactory.generateSpecification(
+            searchQuery, specBuilder, ALLOWED_FIELDS);
 
         return specBuilder.build();
     }

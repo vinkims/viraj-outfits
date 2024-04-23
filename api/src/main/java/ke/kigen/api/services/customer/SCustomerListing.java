@@ -22,12 +22,13 @@ public class SCustomerListing extends SBaseCustomer implements ICustomerListing 
     private final SpecFactory specFactory;
 
     @Override
+    @SuppressWarnings("unchecked")
     public Specification<ECustomer> buildFilterSpec(String searchQuery) {
 
-        SpecBuilder<ECustomer> specBuilder = new SpecBuilder();
+        SpecBuilder<ECustomer> specBuilder = new SpecBuilder<>();
 
-        specBuilder = (SpecBuilder<ECustomer>) specFactory.generateSpecification(searchQuery, 
-            specBuilder, ALLOWED_FIELDS);
+        specBuilder = (SpecBuilder<ECustomer>) specFactory.generateSpecification(
+            searchQuery, specBuilder, ALLOWED_FIELDS);
 
         return specBuilder.build();
     }

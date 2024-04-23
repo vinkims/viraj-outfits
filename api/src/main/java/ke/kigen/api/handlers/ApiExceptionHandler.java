@@ -36,9 +36,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
      * 
      * @return  ResponseEntity object
      */
-    @Override
-    public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, 
-            HttpStatus status, WebRequest request) {
+    public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, 
+            HttpHeaders headers, HttpStatus status, WebRequest request) {
 
         String message = "Invalid input field value in request body";
 
