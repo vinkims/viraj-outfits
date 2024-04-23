@@ -22,7 +22,7 @@ import ke.kigen.api.dtos.general.PageDTO;
 import ke.kigen.api.models.contacts.EContactType;
 import ke.kigen.api.responses.SuccessPaginatedResponse;
 import ke.kigen.api.responses.SuccessResponse;
-import ke.kigen.api.services.contact.contact_type.SContactType;
+import ke.kigen.api.services.contact.IContactType;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -30,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CContactType {
     
-    private final SContactType sContactType;
+    private final IContactType sContactType;
 
     @PostMapping(path = "", consumes = "application/json", produces = "application/json")
     public ResponseEntity<SuccessResponse> createContactType(@Valid @RequestBody ContactTypeDTO contactTypeDTO) 

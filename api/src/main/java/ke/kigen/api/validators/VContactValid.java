@@ -12,19 +12,19 @@ import ke.kigen.api.configs.properties.MainConfig;
 import ke.kigen.api.configs.properties.contact.ContactConfig;
 import ke.kigen.api.dtos.contacts.ContactDTO;
 import ke.kigen.api.models.contacts.EContactType;
-import ke.kigen.api.services.contact._contact.SContact;
-import ke.kigen.api.services.contact.contact_type.SContactType;
+import ke.kigen.api.services.contact.IContact;
+import ke.kigen.api.services.contact.IContactType;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class VContactValid implements ConstraintValidator<IsContactValid, ContactDTO> {
 
+    private final IContact sContact;
+
+    private final IContactType sContactType;
+
     private final MainConfig mainConfig;
-
-    private final SContact sContact;
-
-    private final SContactType sContactType;
 
     private String defaultMessage;
 

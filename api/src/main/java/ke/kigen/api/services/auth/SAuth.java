@@ -14,8 +14,7 @@ import ke.kigen.api.dtos.auth.SignoutDTO;
 import ke.kigen.api.exceptions.InvalidInputException;
 import ke.kigen.api.models.auth.EBlacklistToken;
 import ke.kigen.api.models.user.EUser;
-import ke.kigen.api.services.auth.blacklist.SBlacklist;
-import ke.kigen.api.services.user.SUser;
+import ke.kigen.api.services.user.IUser;
 import ke.kigen.api.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,13 +26,14 @@ public class SAuth implements IAuth {
 
     private final AuthenticationManager authenticationManager;
 
+    private final IBlacklist sBlacklist;
+    
+    private final IUser sUser;
+
     private final IUserDetails sUserDetails;
 
     private final JwtUtil jwtUtil;
 
-    private final SBlacklist sBlacklist;
-
-    private final SUser sUser;
     
     @Override
     public String authenticateUser(AuthDTO authDTO) {

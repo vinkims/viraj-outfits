@@ -22,7 +22,7 @@ import ke.kigen.api.dtos.user.UserDTO;
 import ke.kigen.api.models.user.EUser;
 import ke.kigen.api.responses.SuccessPaginatedResponse;
 import ke.kigen.api.responses.SuccessResponse;
-import ke.kigen.api.services.user.SUser;
+import ke.kigen.api.services.user.IUser;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -30,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CUser {
     
-    private final SUser sUser;
+    private final IUser sUser;
 
     @PostMapping(path = "", consumes = "application/json", produces = "application/json")
     public ResponseEntity<SuccessResponse> createUser(@Valid @RequestBody UserDTO userDTO) 

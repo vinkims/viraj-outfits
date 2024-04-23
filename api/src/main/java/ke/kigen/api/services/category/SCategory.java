@@ -4,61 +4,102 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import ke.kigen.api.dtos.category.CategoryDTO;
 import ke.kigen.api.dtos.general.PageDTO;
+import ke.kigen.api.exceptions.NotFoundException;
 import ke.kigen.api.models.category.ECategory;
+import ke.kigen.api.repositories.category.CategoryDAO;
+import ke.kigen.api.specifications.SpecBuilder;
+import ke.kigen.api.specifications.SpecFactory;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class SCategory implements ICategoryCreate, ICategoryListing, ICategoryUpdate {
+public class SCategory implements ICategory {
     
-    private final ICategoryCreate sCategoryCreate;
+    private final CategoryDAO categoryDAO;
 
-    private final ICategoryListing sCategoryListing;
-
-    private final ICategoryUpdate sCategoryUpdate;
+    private final SpecFactory specFactory;
 
     @Override
+    @SuppressWarnings("unchecked")
     public Specification<ECategory> buildFilterSpec(String searchQuery) {
-        return sCategoryListing.buildFilterSpec(searchQuery);
+        
+        SpecBuilder<ECategory> specBuilder = new SpecBuilder<>();
+
+        specBuilder = (SpecBuilder<ECategory>) specFactory.generateSpecification(
+            searchQuery, specBuilder, ALLOWED_FIELDS);
+
+        return specBuilder.build();
     }
 
     @Override
     public ECategory create(CategoryDTO categoryDTO) {
-        return sCategoryCreate.create(categoryDTO);
+        ECategory category = new ECategory();
+        category.setDescription(categoryDTO.getDescription());
+        category.setName(categoryDTO.getName());
+
+        save(category);
+        return category;
     }
 
     @Override
     public Boolean checkExistsByName(String name) {
-        return sCategoryListing.checkExistsByName(name);
+        return categoryDAO.existsByName(name);
     }
 
     @Override
     public Optional<ECategory> getById(Integer categoryId) {
-        return sCategoryListing.getById(categoryId);
+        return categoryDAO.findById(categoryId);
     }
 
     @Override
     public ECategory getById(Integer categoryId, Boolean handleNotFound) {
-        return sCategoryListing.getById(categoryId, handleNotFound);
+        
+        Optional<ECategory> category = getById(categoryId);
+        if (!category.isPresent() && handleNotFound) {
+            throw new NotFoundException("category with specified id not found", "categoryId");
+        }
+        return category.get();
     }
 
     @Override
     public List<ECategory> getFilteredList(String searchQuery) {
-        return sCategoryListing.getFilteredList(searchQuery);
+        return categoryDAO.findAll(buildFilterSpec(searchQuery));
     }
 
     @Override
     public Page<ECategory> getPaginatedList(PageDTO pageDTO) {
-        return sCategoryListing.getPaginatedList(pageDTO);
+        
+        String search = pageDTO.getSearch();
+
+        PageRequest pageRequest = PageRequest.of(pageDTO.getPageNumber(), pageDTO.getPageSize(), 
+            Sort.by(pageDTO.getDirection(), pageDTO.getSortVal()));
+
+        return categoryDAO.findAll(buildFilterSpec(search), pageRequest);
+    }
+
+    @Override
+    public void save(ECategory category) {
+        categoryDAO.save(category);
     }
 
     @Override
     public ECategory update(Integer categoryId, CategoryDTO categoryDTO) {
-        return sCategoryUpdate.update(categoryId, categoryDTO);
+        ECategory category = getById(categoryId, true);
+        if (categoryDTO.getDescription() != null) {
+            category.setDescription(categoryDTO.getDescription());
+        }
+        if (categoryDTO.getName() != null) {
+            category.setName(categoryDTO.getName());
+        }
+
+        save(category);
+        return category;
     }
 }

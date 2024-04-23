@@ -1,4 +1,4 @@
-package ke.kigen.api.services.auth.blacklist;
+package ke.kigen.api.services.auth;
 
 import java.time.LocalDateTime;
 
@@ -11,9 +11,14 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class SBlacklistCreate implements IBlacklistCreate {
+public class SBlacklist implements IBlacklist {
     
     private final BlacklistTokenDAO blacklistTokenDAO;
+
+    @Override
+    public Boolean checkExistsByTokenHash(Integer tokenHash) {
+        return blacklistTokenDAO.existsByTokenHash(tokenHash);
+    }
 
     @Override
     public EBlacklistToken create(String token, EUser user) {
@@ -27,8 +32,12 @@ public class SBlacklistCreate implements IBlacklistCreate {
     }
 
     @Override
+    public Integer getTokenHash(String token) {
+        return token.hashCode();
+    }
+
+    @Override
     public void save(EBlacklistToken blacklistToken) {
         blacklistTokenDAO.save(blacklistToken);
     }
-    
 }

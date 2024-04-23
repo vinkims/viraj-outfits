@@ -14,7 +14,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.security.auth.message.AuthException;
 import ke.kigen.api.configs.properties.MainConfig;
 import ke.kigen.api.configs.properties.security.SecurityConfig;
-import ke.kigen.api.services.auth.blacklist.SBlacklist;
+import ke.kigen.api.services.auth.IBlacklist;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class JwtUtil {
     
-    private final SBlacklist sBlacklist;
+    private final IBlacklist sBlacklist;
     
     private final MainConfig mainConfig;
 

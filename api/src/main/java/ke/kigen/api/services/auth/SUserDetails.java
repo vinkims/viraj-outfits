@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import ke.kigen.api.configs.properties.MainConfig;
 import ke.kigen.api.exceptions.InvalidInputException;
 import ke.kigen.api.models.user.EUser;
-import ke.kigen.api.services.user.SUser;
+import ke.kigen.api.services.user.IUser;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -23,7 +23,7 @@ public class SUserDetails implements IUserDetails {
 
     private final MainConfig mainConfig;
 
-    private final SUser sUser;
+    private final IUser sUser;
 
     @Override
     public Boolean checkIsSystemAdmin() {

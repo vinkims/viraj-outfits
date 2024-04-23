@@ -22,7 +22,7 @@ import ke.kigen.api.dtos.general.PageDTO;
 import ke.kigen.api.models.customer.ECustomer;
 import ke.kigen.api.responses.SuccessPaginatedResponse;
 import ke.kigen.api.responses.SuccessResponse;
-import ke.kigen.api.services.customer.SCustomer;
+import ke.kigen.api.services.customer.ICustomer;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -30,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CCustomer {
     
-    private final SCustomer sCustomer;
+    private final ICustomer sCustomer;
 
     @PostMapping(path = "", consumes = "application/json", produces = "application/json")
     public ResponseEntity<SuccessResponse> createCustomer(@Valid @RequestBody CustomerDTO customerDTO) 

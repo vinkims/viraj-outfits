@@ -22,7 +22,7 @@ import ke.kigen.api.dtos.general.PageDTO;
 import ke.kigen.api.models.category.ECategory;
 import ke.kigen.api.responses.SuccessPaginatedResponse;
 import ke.kigen.api.responses.SuccessResponse;
-import ke.kigen.api.services.category.SCategory;
+import ke.kigen.api.services.category.ICategory;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -30,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CCategory {
     
-    private final SCategory sCategory;
+    private final ICategory sCategory;
 
     @PostMapping(path = "", consumes = "application/json", produces = "application/json")
     public ResponseEntity<SuccessResponse> createCategory(@Valid @RequestBody CategoryDTO categoryDTO) 

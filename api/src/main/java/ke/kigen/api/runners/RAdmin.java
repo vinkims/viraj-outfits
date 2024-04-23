@@ -14,7 +14,7 @@ import ke.kigen.api.configs.properties.role.RoleConfig;
 import ke.kigen.api.dtos.contacts.ContactDTO;
 import ke.kigen.api.dtos.user.UserDTO;
 import ke.kigen.api.models.user.EUser;
-import ke.kigen.api.services.user.SUser;
+import ke.kigen.api.services.user.IUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,7 +25,7 @@ public class RAdmin implements CommandLineRunner {
 
     private final MainConfig mainConfig;
 
-    private final SUser sUser;
+    private final IUser sUser;
     
     @Override
     public void run(String... args) throws Exception {
