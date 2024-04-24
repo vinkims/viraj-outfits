@@ -8,7 +8,8 @@ VALUES
     (6, 'rejected', 'transaction rejected'),
     (7, 'canceled', 'transaction canceled by user'),
     (8, 'partial', 'resource has not been actioned fully'),
-    (9, 'sold', 'item has been sold');
+    (9, 'sold', 'item has been sold'),
+    (10, 'in-stock', 'item is in stock');
 
 alter sequence IF EXISTS statuses_id_seq restart with 10;
 

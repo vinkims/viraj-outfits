@@ -18,6 +18,8 @@ public class StatusConfig {
 
     private Integer inactiveId;
 
+    private Integer inStockId;
+
     private Integer partialId;
 
     private Integer pendingId;
@@ -32,6 +34,7 @@ public class StatusConfig {
         setCompleteId(4);
         setFailedId(5);
         setInactiveId(2);
+        setInStockId(10);
         setPartialId(8);
         setPendingId(3);
         setRejectedId(6);

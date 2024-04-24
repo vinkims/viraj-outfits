@@ -97,7 +97,8 @@ CREATE TABLE IF NOT EXISTS items (
     "color" VARCHAR(50),
     "size" VARCHAR(50),
     "price" NUMERIC(11, 4) DEFAULT 0,
-    "image_id" INTEGER REFERENCES images("id") ON DELETE SET NULL
+    "image_id" INTEGER REFERENCES images("id") ON DELETE SET NULL,
+    "status_id" SMALLINT REFERENCES statuses("id") ON DELETE SET NULL
 );
 
 -- inventories
