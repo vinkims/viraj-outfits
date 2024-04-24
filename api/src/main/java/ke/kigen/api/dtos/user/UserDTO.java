@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import jakarta.validation.Valid;
 import ke.kigen.api.dtos.contacts.ContactDTO;
 import ke.kigen.api.dtos.role.RoleDTO;
@@ -15,6 +18,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@JsonInclude(value = Include.NON_NULL)
 public class UserDTO {
     
     private Integer id;
