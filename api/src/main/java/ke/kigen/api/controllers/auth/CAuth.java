@@ -38,7 +38,7 @@ public class CAuth {
     }
 
     @PostMapping(path = "/logout", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<SuccessResponse> signoutUser(@Valid SignoutDTO signoutDTO) {
+    public ResponseEntity<SuccessResponse> signoutUser(@Valid @RequestBody SignoutDTO signoutDTO) {
 
         Boolean isSignout = sAuth.signoutUser(signoutDTO);
 

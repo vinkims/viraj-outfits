@@ -2,6 +2,7 @@ package ke.kigen.api.services.auth;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -65,11 +66,19 @@ public class SAuth implements IAuth {
         return token;
     }
 
+    private EUser getUser(Integer userId) {
+
+        Optional<EUser> user = sUser.getById(userId);
+        if (!user.isPresent()) {
+            throw new InvalidInputException("user not found", "userId");
+        }
+        return user.get();
+    }
+
     @Override
     public Boolean signoutUser(SignoutDTO signoutDTO) {
 
-        EUser user = sUser.getById(signoutDTO.getUserId())
-            .orElseThrow(() -> new InvalidInputException("invalid userId", "userId"));
+        EUser user = getUser(signoutDTO.getUserId());
         
         EBlacklistToken blacklistToken = sBlacklist.create(signoutDTO.getToken(), user);
 
