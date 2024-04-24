@@ -20,7 +20,7 @@ import ke.kigen.api.dtos.item.InventoryDTO;
 import ke.kigen.api.models.item.EInventory;
 import ke.kigen.api.responses.SuccessPaginatedResponse;
 import ke.kigen.api.responses.SuccessResponse;
-import ke.kigen.api.services.item.IInventory;
+import ke.kigen.api.services.item.inventory.IInventory;
 import lombok.RequiredArgsConstructor;
 
 @RestController

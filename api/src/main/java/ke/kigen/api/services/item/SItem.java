@@ -24,6 +24,8 @@ import ke.kigen.api.models.item.EItemType;
 import ke.kigen.api.models.status.EStatus;
 import ke.kigen.api.repositories.item.ItemDAO;
 import ke.kigen.api.services.category.ICategory;
+import ke.kigen.api.services.item.image.IImage;
+import ke.kigen.api.services.item.item_type.IItemType;
 import ke.kigen.api.services.status.IStatus;
 import ke.kigen.api.specifications.SpecBuilder;
 import ke.kigen.api.specifications.SpecFactory;

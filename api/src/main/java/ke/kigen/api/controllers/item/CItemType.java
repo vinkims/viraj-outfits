@@ -22,7 +22,7 @@ import ke.kigen.api.dtos.item.ItemTypeDTO;
 import ke.kigen.api.models.item.EItemType;
 import ke.kigen.api.responses.SuccessPaginatedResponse;
 import ke.kigen.api.responses.SuccessResponse;
-import ke.kigen.api.services.item.IItemType;
+import ke.kigen.api.services.item.item_type.IItemType;
 import lombok.RequiredArgsConstructor;
 
 @RestController

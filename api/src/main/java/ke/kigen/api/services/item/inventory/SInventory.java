@@ -1,4 +1,4 @@
-package ke.kigen.api.services.item;
+package ke.kigen.api.services.item.inventory;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,6 +16,7 @@ import ke.kigen.api.exceptions.NotFoundException;
 import ke.kigen.api.models.item.EInventory;
 import ke.kigen.api.models.item.EItem;
 import ke.kigen.api.repositories.item.InventoryDAO;
+import ke.kigen.api.services.item.IItem;
 import ke.kigen.api.specifications.SpecBuilder;
 import ke.kigen.api.specifications.SpecFactory;
 import lombok.RequiredArgsConstructor;

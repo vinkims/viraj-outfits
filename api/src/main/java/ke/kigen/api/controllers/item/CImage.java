@@ -21,7 +21,7 @@ import ke.kigen.api.dtos.item.ImageDTO;
 import ke.kigen.api.models.item.EImage;
 import ke.kigen.api.responses.SuccessPaginatedResponse;
 import ke.kigen.api.responses.SuccessResponse;
-import ke.kigen.api.services.item.IImage;
+import ke.kigen.api.services.item.image.IImage;
 import lombok.RequiredArgsConstructor;
 
 @RestController

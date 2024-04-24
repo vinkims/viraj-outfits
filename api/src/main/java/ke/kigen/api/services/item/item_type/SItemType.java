@@ -1,4 +1,4 @@
-package ke.kigen.api.services.item;
+package ke.kigen.api.services.item.item_type;
 
 import java.time.LocalDateTime;
 import java.util.List;

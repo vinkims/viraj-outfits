@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import ke.kigen.api.annotations.IsItemTypeNameValid;
-import ke.kigen.api.services.item.IItemType;
+import ke.kigen.api.services.item.item_type.IItemType;
 import lombok.RequiredArgsConstructor;
 
 @Component

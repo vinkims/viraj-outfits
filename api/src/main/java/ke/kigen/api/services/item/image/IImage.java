@@ -1,4 +1,4 @@
-package ke.kigen.api.services.item;
+package ke.kigen.api.services.item.image;
 
 import java.util.List;
 import java.util.Optional;

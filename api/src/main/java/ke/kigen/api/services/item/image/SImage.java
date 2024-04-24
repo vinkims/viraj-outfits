@@ -1,4 +1,4 @@
-package ke.kigen.api.services.item;
+package ke.kigen.api.services.item.image;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
