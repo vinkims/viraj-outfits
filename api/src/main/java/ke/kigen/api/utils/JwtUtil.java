@@ -1,8 +1,11 @@
 package ke.kigen.api.utils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
+
+import javax.crypto.SecretKey;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -34,20 +37,25 @@ public class JwtUtil {
         Integer tokenValidityPeriod = claims.getOrDefault("userRole", "").equals(userApiClientId) 
             ? securityConfig.getTokenValidityPeriodSec()
             : securityConfig.getTokenValidityPeriod();
+        
+        String secretKeyStr = mainConfig.getSecurity().getSecretKey();
+        SecretKey secretKey = Keys.hmacShaKeyFor(secretKeyStr.getBytes(StandardCharsets.UTF_8));
             
         return Jwts.builder()
             .setClaims(claims)
             .setSubject(subject)
             .setIssuedAt(new Date(System.currentTimeMillis()))
             .setExpiration(new Date(System.currentTimeMillis() + 1000L * 60L * 60L * tokenValidityPeriod))
-            .signWith(Keys.hmacShaKeyFor(securityConfig.getSecretKey().getBytes()), SignatureAlgorithm.HS256)
+            .signWith(secretKey, SignatureAlgorithm.HS256)
             .compact();
     }
 
     private Claims extractAllClaims(String token) throws AuthException {
+        String secretKeyStr = mainConfig.getSecurity().getSecretKey();
+        SecretKey secretKey = Keys.hmacShaKeyFor(secretKeyStr.getBytes(StandardCharsets.UTF_8));
         try {
             return Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(mainConfig.getSecurity().getSecretKey().getBytes()))
+                .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();

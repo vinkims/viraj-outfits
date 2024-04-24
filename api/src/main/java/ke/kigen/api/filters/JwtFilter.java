@@ -1,6 +1,8 @@
 package ke.kigen.api.filters;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +17,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ke.kigen.api.configs.properties.MainConfig;
+import ke.kigen.api.configs.properties.logging.LoggingConfig;
 import ke.kigen.api.services.auth.IUserDetails;
 import ke.kigen.api.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +32,8 @@ public class JwtFilter extends OncePerRequestFilter {
     private final IUserDetails sUserDetails;
 
     private final JwtUtil jwtUtil;
+
+    private final MainConfig mainConfig;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -70,7 +76,40 @@ public class JwtFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(requestWrapper, responseWrapper);
         } finally {
+            logRequestResponse(requestWrapper, responseWrapper);
             responseWrapper.copyBodyToResponse();
+        }
+    }
+
+    /**
+     * Logs requests and/or responses
+     * @param requestWrapper
+     * @param responseWrapper
+     * @throws UnsupportedEncodingException
+     */
+    public void logRequestResponse(ContentCachingRequestWrapper requestWrapper, ContentCachingResponseWrapper responseWrapper) 
+            throws UnsupportedEncodingException {
+
+        LoggingConfig loggingConfig = mainConfig.getLogging();
+
+        String method = requestWrapper.getMethod();
+
+        Boolean logRequest = loggingConfig.getLogRequest();
+        Boolean logResponse = loggingConfig.getLogResponse();
+        List<String> allowedMethods = loggingConfig.getAllowedMethods();
+
+        if (logRequest && allowedMethods.contains(method)) {
+            byte[] requestArray = requestWrapper.getContentAsByteArray();
+            String requestStr = new String(requestArray, requestWrapper.getCharacterEncoding());
+            log.info("\n[REQUEST]\n[ENDPOINT] - {} {}\n[PAYLOAD] - {}", 
+                requestWrapper.getRequestURI(), 
+                requestWrapper.getMethod(), requestStr);
+        }
+
+        if (logResponse && allowedMethods.contains(method)) {
+            byte[] responseArray = responseWrapper.getContentAsByteArray();
+            String responseStr = new String(responseArray, responseWrapper.getCharacterEncoding());
+            log.info("\n[RESPONSE]\n[PAYLOAD] - {}", responseStr);
         }
     }
     
