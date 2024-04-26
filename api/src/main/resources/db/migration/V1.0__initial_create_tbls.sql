@@ -165,6 +165,7 @@ CREATE TABLE IF NOT EXISTS payments (
     "amount" NUMERIC(11, 4) DEFAULT 0,
     "description" VARCHAR(200),
     "reference" VARCHAR(150),
+    "payment_channel_id" SMALLINT REFERENCES payment_channels("id") ON DELETE SET NULL,
     "transaction_id" INTEGER REFERENCES transactions("id") ON DELETE SET NULL,
     "order_id" INTEGER REFERENCES orders("id") ON DELETE SET NULL,
     "status_id" SMALLINT REFERENCES statuses("id") ON DELETE SET NULL
