@@ -1,6 +1,7 @@
 package ke.kigen.api.services.order;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,9 +14,11 @@ import org.springframework.stereotype.Service;
 import ke.kigen.api.configs.properties.MainConfig;
 import ke.kigen.api.dtos.general.PageDTO;
 import ke.kigen.api.dtos.order.OrderDTO;
+import ke.kigen.api.dtos.order.OrderItemDTO;
 import ke.kigen.api.exceptions.NotFoundException;
 import ke.kigen.api.models.customer.ECustomer;
 import ke.kigen.api.models.order.EOrder;
+import ke.kigen.api.models.order.EOrderItem;
 import ke.kigen.api.models.order.EOrderType;
 import ke.kigen.api.models.status.EStatus;
 import ke.kigen.api.models.user.EUser;
@@ -33,6 +36,8 @@ import lombok.RequiredArgsConstructor;
 public class SOrder implements IOrder {
 
     private final ICustomer sCustomer;
+
+    private final IOrderItem sOrderItem;
 
     private final IOrderType sOrderType;
 
@@ -77,6 +82,7 @@ public class SOrder implements IOrder {
         setUser(order, userId);
 
         save(order);
+        setOrderItems(order, orderDTO.getOrderItems());
         return order;
     }
 
@@ -123,6 +129,17 @@ public class SOrder implements IOrder {
         order.setCustomer(customer);
     }
 
+    private void setOrderItems(EOrder order,  List<OrderItemDTO> orderItems) {
+        if (orderItems == null || orderItems.isEmpty()) { return; }
+
+        List<EOrderItem> orderItemsList = new ArrayList<>();
+        for (OrderItemDTO orderItemDTO : orderItems) {
+            EOrderItem orderItem = sOrderItem.create(order, orderItemDTO);
+            orderItemsList.add(orderItem);
+        }
+        order.setOrderItems(orderItemsList);
+    }
+
     private void setOrderType(EOrder order, Integer orderTypeId) {
         if (orderTypeId == null) { return; }
 
@@ -148,6 +165,7 @@ public class SOrder implements IOrder {
     public EOrder update(Integer orderId, OrderDTO orderDTO) {
         EOrder order = getById(orderId, true);
         setCustomer(order, orderDTO.getCustomerId());
+        setOrderItems(order, orderDTO.getOrderItems());
         setOrderType(order, orderDTO.getOrderTypeId());
         setStatus(order, orderDTO.getStatusId());
         if (orderDTO.getTotalAmount() != null) {

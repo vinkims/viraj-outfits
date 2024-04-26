@@ -3,6 +3,7 @@ package ke.kigen.api.models.order;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import ke.kigen.api.models.customer.ECustomer;
 import ke.kigen.api.models.status.EStatus;
 import ke.kigen.api.models.user.EUser;
@@ -36,6 +38,9 @@ public class EOrder implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, updatable = false, name = "id")
     private Integer id;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<EOrderItem> orderItems;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_type_id", referencedColumnName = "id")
