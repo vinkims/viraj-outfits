@@ -1,5 +1,7 @@
 package ke.kigen.api.services.payment;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -7,6 +9,8 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -107,32 +111,47 @@ public class SPayment implements IPayment {
 
     @Override
     public Optional<EPayment> getByIdOrExternalId(String paymentValue) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getByIdOrExternalId'");
+        Integer paymentId;
+        try {
+            paymentId = Integer.valueOf(paymentValue);
+        } catch (Exception e) {
+            paymentId = (Integer) null;
+            logger.error("\n[LOCATION] - SPayment.getByIdOrExternalId\n[MSG] {}", e.getMessage());
+            return getByExternalId(paymentValue);
+        }
+
+        return paymentDAO.findByIdOrExternalId(paymentId, paymentValue);
     }
 
     @Override
     public EPayment getByIdOrExternalId(String paymentValue, Boolean handleNotFound) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getByIdOrExternalId'");
+        
+        Optional<EPayment> payment = getByIdOrExternalId(paymentValue);
+        if (!payment.isPresent() && handleNotFound) {
+            throw new NotFoundException("payment with specified id or external id not found", "paymentValue");
+        }
+        return payment.get();
     }
 
     @Override
     public List<EPayment> getFilteredList(String searchQuery) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getFilteredList'");
+        return paymentDAO.findAll(buildFilterSpec(searchQuery));
     }
 
     @Override
     public Page<EPayment> getPaginatedList(PageDTO pageDTO) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPaginatedList'");
+
+        String search = pageDTO.getSearch();
+
+        PageRequest pageRequest = PageRequest.of(pageDTO.getPageNumber(), pageDTO.getPageSize(), 
+            Sort.by(pageDTO.getDirection(), pageDTO.getSortVal()));
+
+        return paymentDAO.findAll(buildFilterSpec(search), pageRequest);
     }
 
     @Override
     public void save(EPayment payment) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'save'");
+        paymentDAO.save(payment);
     }
 
     private void setOrder(EPayment payment, Integer orderId) {
@@ -164,8 +183,29 @@ public class SPayment implements IPayment {
     }
 
     @Override
-    public EPayment update(String paymentValue, PaymentDTO paymentDTO) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    public EPayment update(String paymentValue, PaymentDTO paymentDTO) throws IllegalAccessException, 
+            IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+
+        EPayment payment = getByIdOrExternalId(paymentValue, true);
+
+        String[] fields = {"Amount", "Description", "ExternalId", "Reference"};
+        for (String field : fields) {
+            Method getField = PaymentDTO.class.getMethod(String.format("get%s", field));
+            Object fieldValue = getField.invoke(paymentDTO);
+
+            if (fieldValue != null) {
+                fieldValue = fieldValue.getClass().equals(String.class) ? ((String) fieldValue).trim() : fieldValue;
+                EPayment.class.getMethod("set" + field, fieldValue.getClass()).invoke(payment, fieldValue);
+            }
+        }
+
+        setOrder(payment, paymentDTO.getOrderId());
+        setPaymentChannel(payment, paymentDTO.getPaymentChannelId());
+        setStatus(payment, paymentDTO.getStatusId());
+        setTransaction(payment, paymentDTO.getTransactionId());
+        payment.setUpdatedOn(LocalDateTime.now());
+
+        save(payment);
+        return payment;
     }
 }

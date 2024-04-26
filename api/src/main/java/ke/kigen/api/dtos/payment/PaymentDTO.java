@@ -1,7 +1,9 @@
 package ke.kigen.api.dtos.payment;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import ke.kigen.api.annotations.IsPaymentDuplicate;
 import ke.kigen.api.dtos.order.OrderDTO;
 import ke.kigen.api.dtos.status.StatusDTO;
 import ke.kigen.api.models.payment.EPayment;
@@ -14,9 +16,10 @@ public class PaymentDTO {
     
     private Integer id;
 
+    @IsPaymentDuplicate
     private String externalId;
 
-    private String amount;
+    private BigDecimal amount;
 
     private LocalDateTime createdOn;
 

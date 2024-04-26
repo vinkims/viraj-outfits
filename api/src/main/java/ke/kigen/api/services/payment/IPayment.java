@@ -1,4 +1,5 @@
 package ke.kigen.api.services.payment;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import java.util.Optional;
@@ -48,5 +49,6 @@ public interface IPayment {
 
     void save(EPayment payment);
 
-    EPayment update(String paymentValue, PaymentDTO paymentDTO);
+    EPayment update(String paymentValue, PaymentDTO paymentDTO) throws IllegalAccessException, 
+        IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException;
 }
