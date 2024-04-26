@@ -8,11 +8,14 @@ import org.springframework.data.jpa.domain.Specification;
 
 import ke.kigen.api.dtos.general.PageDTO;
 import ke.kigen.api.dtos.role.RoleDTO;
+import ke.kigen.api.dtos.role.RolePermissionDTO;
 import ke.kigen.api.models.role.ERole;
 
 public interface IRole {
     
     final List<String> ALLOWED_FIELDS = List.of();
+
+    void addRolePermissions(Integer roleId, List<RolePermissionDTO> rolePermissions);
 
     Specification<ERole> buildFilterSpec(String searchQuery);
 
@@ -27,6 +30,8 @@ public interface IRole {
     List<ERole> getFilteredList(String searchQuery);
 
     Page<ERole> getPaginatedList(PageDTO pageDTO);
+
+    void removeRolePermission(Integer roleId, List<RolePermissionDTO> rolePermissions);
 
     void save(ERole role);
 

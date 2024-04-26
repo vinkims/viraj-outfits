@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -77,5 +78,25 @@ public class CRole {
         return ResponseEntity
             .ok()
             .body(new SuccessResponse(200, "successfully updated role", new RoleDTO(role)));
+    }
+
+    @PostMapping(path = "/{roleId}/permission", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<SuccessResponse> addRolePermissions(@PathVariable Integer roleId, @RequestBody RoleDTO roleDTO) {
+
+        sRole.addRolePermissions(roleId, roleDTO.getRolePermissions());
+
+        return ResponseEntity
+            .ok()
+            .body(new SuccessResponse(200, "successfully added permission(s) to role", null));
+    }
+
+    @DeleteMapping(path = "/{roleId}/permission", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<SuccessResponse> removeRolePermissions(@PathVariable Integer roleId, @RequestBody RoleDTO roleDTO) {
+
+        sRole.removeRolePermission(roleId, roleDTO.getRolePermissions());
+
+        return ResponseEntity
+            .ok()
+            .body(new SuccessResponse(200, "successfully removed permission(s) from role", null));
     }
 }
