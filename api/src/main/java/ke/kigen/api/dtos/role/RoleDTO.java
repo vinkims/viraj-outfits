@@ -3,6 +3,9 @@ package ke.kigen.api.dtos.role;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import ke.kigen.api.annotations.IsRoleNameValid;
 import ke.kigen.api.models.role.ERole;
 import ke.kigen.api.models.role.ERolePermission;
@@ -11,6 +14,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@JsonInclude(value = Include.NON_NULL)
 public class RoleDTO {
     
     private Integer id;

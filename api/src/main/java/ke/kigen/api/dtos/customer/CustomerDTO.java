@@ -2,6 +2,9 @@ package ke.kigen.api.dtos.customer;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import ke.kigen.api.annotations.IsCustomerEmailDuplicate;
 import ke.kigen.api.annotations.IsCustomerMobileDuplicate;
 import ke.kigen.api.dtos.status.StatusDTO;
@@ -11,6 +14,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@JsonInclude(value = Include.NON_NULL)
 public class CustomerDTO {
     
     private Integer id;

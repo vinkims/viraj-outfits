@@ -3,6 +3,10 @@ package ke.kigen.api.dtos.item;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import ke.kigen.api.dtos.category.CategoryDTO;
 import ke.kigen.api.dtos.status.StatusDTO;
 import ke.kigen.api.models.item.EItem;
@@ -11,10 +15,12 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@JsonInclude(value = Include.NON_NULL)
 public class ItemDTO {
     
     private Integer id;
 
+    @JsonIgnoreProperties(value = {"createdOn", "updatedOn", "status"})
     private ItemTypeDTO itemType;
 
     private Integer itemTypeId;
@@ -48,7 +54,9 @@ public class ItemDTO {
         setColor(item.getColor());
         setCreatedOn(item.getCreatedOn());
         setId(item.getId());
-        setImage(new ImageDTO(item.getImage()));
+        if (item.getImage() != null) {
+            setImage(new ImageDTO(item.getImage()));
+        }
         setItemType(new ItemTypeDTO(item.getItemType()));
         setName(item.getName());
         setPrice(item.getPrice());

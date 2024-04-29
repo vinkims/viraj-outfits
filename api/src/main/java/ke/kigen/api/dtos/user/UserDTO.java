@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -39,6 +40,7 @@ public class UserDTO {
 
     private LocalDateTime lastActiveOn;
 
+    @JsonIgnoreProperties(value = {"rolePermissions"})
     private RoleDTO role;
 
     private Integer roleId;

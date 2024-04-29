@@ -2,6 +2,9 @@ package ke.kigen.api.dtos.item;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import ke.kigen.api.annotations.IsItemTypeNameValid;
 import ke.kigen.api.dtos.status.StatusDTO;
 import ke.kigen.api.models.item.EItemType;
@@ -10,6 +13,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@JsonInclude(value = Include.NON_NULL)
 public class ItemTypeDTO {
     
     private Integer id;

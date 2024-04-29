@@ -31,6 +31,6 @@ public class ERole implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
     private List<ERolePermission> rolePermissions;
 }

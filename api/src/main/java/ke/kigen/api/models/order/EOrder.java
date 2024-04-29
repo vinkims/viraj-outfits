@@ -39,7 +39,7 @@ public class EOrder implements Serializable {
     @Column(nullable = false, updatable = false, name = "id")
     private Integer id;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     private List<EOrderItem> orderItems;
 
     @ManyToOne(fetch = FetchType.LAZY)

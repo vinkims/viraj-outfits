@@ -63,7 +63,7 @@ public class RAdmin implements CommandLineRunner {
         log.info("\nSystem admin created: id=>{}, name=>{}, email=>{}",
             admin.getId(),
             String.format("%s %s", firstName, lastName),
-            roleConfig.getSystemAdminId()
+            adminConfig.getEmail()
         );
     }
     
