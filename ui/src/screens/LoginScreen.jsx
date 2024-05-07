@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { 
+  Alert,
   Box, 
   Button, 
   Card, 
@@ -8,6 +10,7 @@ import {
   Divider, 
   IconButton, 
   InputAdornment, 
+  Snackbar, 
   Stack, 
   TextField, 
   Typography 
@@ -16,17 +19,27 @@ import VisibilityOn from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 import ServerCommunicationUtils from "../utils/ServerCommunicationUtils";
+import { useAuth } from "../contexts/Auth";
 import ValidationUtils from "../utils/ValidationUtils";
 
 const LoginScreen = () => {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const [ alertMessage, setAlertMessage ] = useState('');
   const [ isPasswordError, setIsPasswordError ] = useState(false);
   const [ isUsernameError, setIsUsernameError ] = useState(false);
   const [ loading, setLoading ] = useState(false);
+  const [ openAlert, setOpenAlert ] = useState(false);
   const [ password, setPassword ] = useState('');
   const [ passwordErrorText, setPasswordErrorText ] = useState('');
+  const [ severity, setSeverity ] = useState('success');
   const [ showPassword, setShowPassword ] = useState(false);
   const [ username, setUsername ] = useState('');
   const [ usernameErrorText, setUsernameErrorText ] = useState('');
+
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
+  }
 
   const handleLogin = async () => {
     const conditions = [
@@ -58,12 +71,30 @@ const LoginScreen = () => {
 
     await ServerCommunicationUtils.postNoAuth('auth/login', payload)
     .then(data => {
-      console.log("Data:", data);
-      setLoading(false);
+      if (data.status === 200) {
+        setLoading(false);
+        setOpenAlert(true);
+        setSeverity('success');
+        setAlertMessage('Login successful');
+        login(data.content.token);
+        navigate("/dashboard");
+      } else if (data.status === 400) {
+        setLoading(false);
+        setOpenAlert(true);
+        setSeverity('error');
+        setAlertMessage('Invalid credentials provided');
+      }
     })
     .catch(error => {
       console.error("Error:", error);
       setLoading(false);
+      setOpenAlert(true);
+      setSeverity('error');
+      if (error.toString().includes('NetworkError when attempting to fetch resource')) {
+        setAlertMessage('Please check your internet connection');
+      } else {
+        setAlertMessage('Error logging in');
+      }
     })
   }
 
@@ -81,6 +112,21 @@ const LoginScreen = () => {
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
+  }
+
+  const showAlert = () => {
+    return (
+      <Snackbar 
+        open={openAlert} 
+        autoHideDuration={7000} 
+        onClose={handleCloseAlert} 
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseAlert} variant="filled" severity={severity}>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
+    );
   }
 
   return (
@@ -154,6 +200,7 @@ const LoginScreen = () => {
           </Stack>
         </Card>
       </Box>
+      {showAlert()}
     </Container>
   );
 }
