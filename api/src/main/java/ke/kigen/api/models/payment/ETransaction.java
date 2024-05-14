@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import ke.kigen.api.models.status.EStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -46,6 +47,12 @@ public class ETransaction implements Serializable {
 
     @Column(name = "transaction_code")
     private String transactionCode;
+
+    @OneToOne(mappedBy = "transaction", fetch = FetchType.LAZY)
+    private ETransactionExpense transactionExpense;
+
+    @OneToOne(mappedBy = "transaction", fetch = FetchType.LAZY)
+    private ETransactionIncome transactionIncome;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "transaction_type_id", referencedColumnName = "id")

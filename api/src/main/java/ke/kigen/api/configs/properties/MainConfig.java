@@ -9,6 +9,7 @@ import ke.kigen.api.configs.properties.logging.LoggingConfig;
 import ke.kigen.api.configs.properties.role.RoleConfig;
 import ke.kigen.api.configs.properties.security.SecurityConfig;
 import ke.kigen.api.configs.properties.status.StatusConfig;
+import ke.kigen.api.configs.properties.transaction.TransactionTypeConfig;
 import ke.kigen.api.configs.properties.user.UserConfig;
 import lombok.Data;
 
@@ -29,6 +30,8 @@ public class MainConfig {
     
     private StatusConfig status;
 
+    private TransactionTypeConfig transactionType;
+
     private UserConfig user;
 
     public MainConfig() {
@@ -38,6 +41,7 @@ public class MainConfig {
         setRole(new RoleConfig());
         setSecurity(new SecurityConfig());
         setStatus(new StatusConfig());
+        setTransactionType(new TransactionTypeConfig());
         setUser(new UserConfig());
     }
 }

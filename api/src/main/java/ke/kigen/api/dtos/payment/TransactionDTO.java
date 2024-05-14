@@ -34,6 +34,10 @@ public class TransactionDTO {
 
     private String reference;
 
+    private TransactionExpenseDTO transactionExpense;
+
+    private TransactionIncomeDTO transactionIncome;
+
     private LocalDateTime updatedOn;
 
     private StatusDTO status;
@@ -48,6 +52,12 @@ public class TransactionDTO {
         setReference(transaction.getReference());
         setStatus(new StatusDTO(transaction.getStatus()));
         setTransactionCode(transaction.getTransactionCode());
+        if (transaction.getTransactionExpense() != null) {
+            setTransactionExpense(new TransactionExpenseDTO(transaction.getTransactionExpense()));
+        }
+        if (transaction.getTransactionIncome() != null) {
+            setTransactionIncome(new TransactionIncomeDTO(transaction.getTransactionIncome()));
+        }
         setTransactionType(new TransactionTypeDTO(transaction.getTransactionType()));
         setUpdatedOn(transaction.getUpdatedOn());
     }

@@ -17,11 +17,19 @@ import org.springframework.stereotype.Service;
 import ke.kigen.api.configs.properties.MainConfig;
 import ke.kigen.api.dtos.general.PageDTO;
 import ke.kigen.api.dtos.payment.TransactionDTO;
+import ke.kigen.api.dtos.payment.TransactionExpenseDTO;
+import ke.kigen.api.dtos.payment.TransactionIncomeDTO;
 import ke.kigen.api.exceptions.NotFoundException;
+import ke.kigen.api.models.expense.EExpense;
+import ke.kigen.api.models.income.EIncome;
 import ke.kigen.api.models.payment.ETransaction;
+import ke.kigen.api.models.payment.ETransactionExpense;
+import ke.kigen.api.models.payment.ETransactionIncome;
 import ke.kigen.api.models.payment.ETransactionType;
 import ke.kigen.api.models.status.EStatus;
 import ke.kigen.api.repositories.payment.TransactionDAO;
+import ke.kigen.api.services.expense.IExpense;
+import ke.kigen.api.services.income.IIncome;
 import ke.kigen.api.services.payment.transaction_type.ITransactionType;
 import ke.kigen.api.services.status.IStatus;
 import ke.kigen.api.specifications.SpecBuilder;
@@ -34,7 +42,15 @@ public class STransaction implements ITransaction {
 
     Logger logger = LoggerFactory.getLogger(STransaction.class);
 
+    private final IExpense sExpense;
+
+    private final IIncome sIncome;
+
     private final IStatus sStatus;
+
+    private final ITransactionExpense sTransactionExpense;
+
+    private final ITransactionIncome sTransactionIncome;
 
     private final ITransactionType sTransactionType;
 
@@ -76,6 +92,8 @@ public class STransaction implements ITransaction {
         setTransactionType(transaction, transactionDTO.getTransactionTypeId());
 
         save(transaction);
+        setTransactionExpense(transaction, transactionDTO.getTransactionExpense());
+        setTransactionIncome(transaction, transactionDTO.getTransactionIncome());
         return transaction;
     }
 
@@ -149,6 +167,22 @@ public class STransaction implements ITransaction {
 
         EStatus status = sStatus.getById(statusId, true);
         transaction.setStatus(status);
+    }
+
+    private void setTransactionExpense(ETransaction transaction, TransactionExpenseDTO transactionExpenseDTO) {
+        if (transactionExpenseDTO == null) { return; }
+
+        EExpense expense = sExpense.getById(transactionExpenseDTO.getExpenseId(), true);
+        ETransactionExpense transactionExpense = sTransactionExpense.create(transaction, expense);
+        transaction.setTransactionExpense(transactionExpense);
+    }
+
+    private void setTransactionIncome(ETransaction transaction, TransactionIncomeDTO transactionIncomeDTO) {
+        if (transactionIncomeDTO == null) { return; }
+
+        EIncome income = sIncome.getById(transactionIncomeDTO.getIncomeId(), true);
+        ETransactionIncome transactionIncome = sTransactionIncome.create(transaction, income);
+        transaction.setTransactionIncome(transactionIncome);
     }
 
     private void setTransactionType(ETransaction transaction, Integer transactionTypeId) {
