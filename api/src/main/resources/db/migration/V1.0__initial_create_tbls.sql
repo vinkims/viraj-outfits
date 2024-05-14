@@ -110,6 +110,44 @@ CREATE TABLE IF NOT EXISTS inventories (
     "updated_on" TIMESTAMPTZ
 );
 
+-- expense_types
+CREATE TABLE IF NOT EXISTS expense_types (
+    "id" SMALLSERIAL PRIMARY KEY,
+    "name" VARCHAR(50) NOT NULL UNIQUE,
+    "description" VARCHAR(150)
+);
+
+-- expenses
+CREATE TABLE IF NOT EXISTS expenses (
+    "id" SERIAL PRIMARY KEY,
+    "expense_type_id" SMALLINT REFERENCES expense_types("id") ON DELETE SET NULL,
+    "created_on" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    "updated_on" TIMESTAMPTZ,
+    "description" VARCHAR(200),
+    "amount" NUMERIC(11, 4) DEFAULT 0,
+    "user_id" INTEGER REFERENCES users("id") ON DELETE SET NULL,
+    "status_id" SMALLINT REFERENCES statuses("id") ON DELETE SET NULL
+);
+
+-- income_types
+CREATE TABLE IF NOT EXISTS income_types (
+    "id" SMALLSERIAL PRIMARY KEY,
+    "name" VARCHAR(50) NOT NULL UNIQUE,
+    "description" VARCHAR(150),
+);
+
+-- incomes
+CREATE TABLE IF NOT EXISTS incomes (
+    "id" SERIAL PRIMARY KEY,
+    "income_type_id" SMALLINT REFERENCES income_types("id") ON DELETE SET NULL,
+    "created_on" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    "updated_on" TIMESTAMPTZ,
+    "description" VARCHAR(200),
+    "amount" NUMERIC(11, 4) DEFAULT 0,
+    "user_id" INTEGER REFERENCES users("id") ON DELETE SET NULL,
+    "status_id" SMALLINT REFERENCES statuses("id") ON DELETE SET NULL
+);
+
 -- payment_channels
 CREATE TABLE IF NOT EXISTS payment_channels (
     "id" SMALLSERIAL PRIMARY KEY,
@@ -135,6 +173,20 @@ CREATE TABLE IF NOT EXISTS transactions (
     "transaction_type_id" SMALLINT REFERENCES transaction_types("id") ON DELETE SET NULL,
     "reference" VARCHAR(150),
     "status_id" SMALLINT REFERENCES statuses("id") ON DELETE SET NULL
+);
+
+-- transaction_expenses
+CREATE TABLE IF NOT EXISTS transaction_expenses (
+    "transaction_id" INTEGER REFERENCES transactions("id") ON DELETE CASCADE,
+    "expense_id" INTEGER REFERENCES expenses("id") ON DELETE CASCADE,
+    PRIMARY KEY("transaction_id", "expense_id")
+);
+
+-- transaction_incomes
+CREATE TABLE IF NOT EXISTS transaction_incomes (
+    "transaction_id" INTEGER REFERENCES transactions("id") ON DELETE CASCADE,
+    "income_id" INTEGER REFERENCES incomes("id") ON DELETE CASCADE,
+    PRIMARY KEY("transaction_id", "income_id")
 );
 
 -- order_types

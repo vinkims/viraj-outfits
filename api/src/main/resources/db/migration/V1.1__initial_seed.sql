@@ -56,9 +56,11 @@ VALUES
     (6, 'order', 'A customer places an order for an item'),
     (7, 'payment', 'A customer makes a payment for an order'),
     (8, 'cancellation', 'An order is canceled by the customer'),
-    (9, 'discount', 'A discount or promotional offer is applied to an order');
+    (9, 'discount', 'A discount or promotional offer is applied to an order'),
+    (10, 'income', 'Transactions relating to incomes'),
+    (11, 'expenses', 'Transactions relating to expenses');
 
-alter sequence IF EXISTS transaction_types_id_seq restart with 10;
+alter sequence IF EXISTS transaction_types_id_seq restart with 12;
 
 INSERT INTO order_types("id", "name", "description")
 VALUES
@@ -66,3 +68,26 @@ VALUES
     (2, 'purchases', 'Purchase of items from suppliers');
 
 alter sequence IF EXISTS order_types_id_seq restart with 3;
+
+INSERT INTO expense_types("id", "name", "description")
+VALUES
+    (1, 'items_cost', 'Expenses relating to purchasing inventory'),
+    (2, 'rent_payment', 'Monthly rental or lease payments'),
+    (3, 'salary', 'Salaries or wages paid to store employees'),
+    (4, 'utilities', 'Utility expenses for the store'),
+    (5, 'marketing', 'Expenses for advertising campaigns, social media marketing and promotional materials'),
+    (6, 'supplies', 'Expenses for store fixures, hangers, bags, packaging materials and cleaning supplies'),
+    (7, 'tailoring', 'Costs for sewing machines, threads, needles and other tailoring services'),
+    (8, 'insurance', 'Premiums for business insurance policies'),
+    (9, 'inventory_management', 'Costs associated with inventory management systems, software or services'),
+    (10, 'maintenance', 'Costs for maintaining and repairing store equipment, fixtures and facilities');
+
+alter sequence IF EXISTS expense_types_id_seq restart with 11;
+
+INSERT INTO income_types("id", "name", "description")
+VALUES
+    (1, 'sales_revenue', 'Income generated from selling clothe items'),
+    (2, 'tailoring_services', 'Income from providing tailoring or alteration services for clothing items'),
+    (3, 'gift_card_sales', 'Revenue from selling gift cards that can be redeemed for clothing purchases');
+
+alter sequence IF EXISTS income_types_id_seq restart with 4;
