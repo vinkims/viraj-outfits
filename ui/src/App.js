@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Navigate, Route, Routes, useLocation } from "react-router-dom";
 
+import './global.css';
 import { AuthProvider, useAuth } from "./contexts/Auth";
 import { DashboardScreen, LoginScreen } from "./screens";
 import { Sidebar } from "./components";
