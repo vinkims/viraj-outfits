@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 import ke.kigen.api.configs.properties.MainConfig;
 import ke.kigen.api.dtos.general.PageDTO;
 import ke.kigen.api.dtos.income.IncomeDTO;
-import ke.kigen.api.dtos.payment.TransactionDTO;
+import ke.kigen.api.events.IncomeCreatedEvent;
 import ke.kigen.api.exceptions.NotFoundException;
 import ke.kigen.api.models.income.EIncome;
 import ke.kigen.api.models.income.EIncomeType;
@@ -21,7 +22,6 @@ import ke.kigen.api.models.status.EStatus;
 import ke.kigen.api.models.user.EUser;
 import ke.kigen.api.repositories.income.IncomeDAO;
 import ke.kigen.api.services.auth.IUserDetails;
-import ke.kigen.api.services.payment.transaction.ITransaction;
 import ke.kigen.api.services.status.IStatus;
 import ke.kigen.api.services.user.IUser;
 import ke.kigen.api.specifications.SpecBuilder;
@@ -32,13 +32,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SIncome implements IIncome {
     
+    private final ApplicationEventPublisher eventPublisher;
+
     private final IIncomeType sIncomeType;
 
     private final IncomeDAO incomeDAO;
 
     private final IStatus sStatus;
-
-    private final ITransaction sTransaction;
 
     private final IUser sUser;
 
@@ -77,22 +77,8 @@ public class SIncome implements IIncome {
         setUser(income, userId);
 
         save(income);
-        createTransaction(income);
+        eventPublisher.publishEvent(new IncomeCreatedEvent(this, income));
         return income;
-    }
-
-    private void createTransaction(EIncome income) {
-        TransactionDTO transactionDTO = new TransactionDTO();
-        transactionDTO.setAmount(income.getAmount());
-        transactionDTO.setDescription(income.getDescription());
-        String reference = String.format("Income id: %s", income.getId());
-        transactionDTO.setReference(reference);
-        String transactionCode = String.format("%s", System.currentTimeMillis());
-        transactionDTO.setTransactionCode(transactionCode);
-        Integer transactionTypeId = mainConfig.getTransactionType().getIncomeId();
-        transactionDTO.setTransactionTypeId(transactionTypeId);
-
-        sTransaction.create(transactionDTO);
     }
 
     @Override

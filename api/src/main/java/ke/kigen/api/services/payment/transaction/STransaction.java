@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -19,6 +20,8 @@ import ke.kigen.api.dtos.general.PageDTO;
 import ke.kigen.api.dtos.payment.TransactionDTO;
 import ke.kigen.api.dtos.payment.TransactionExpenseDTO;
 import ke.kigen.api.dtos.payment.TransactionIncomeDTO;
+import ke.kigen.api.events.ExpenseCreatedEvent;
+import ke.kigen.api.events.IncomeCreatedEvent;
 import ke.kigen.api.exceptions.NotFoundException;
 import ke.kigen.api.models.expense.EExpense;
 import ke.kigen.api.models.income.EIncome;
@@ -155,6 +158,48 @@ public class STransaction implements ITransaction {
             Sort.by(pageDTO.getDirection(), pageDTO.getSortVal()));
 
         return transactionDAO.findAll(buildFilterSpec(search), pageRequest);
+    }
+
+    @EventListener
+    public void handleExpenseCreated(ExpenseCreatedEvent event) {
+        EExpense expense = event.getExpense();
+        ETransaction transaction = new ETransaction();
+        transaction.setAmount(expense.getAmount());
+        transaction.setCreatedOn(LocalDateTime.now());
+        transaction.setDescription(expense.getDescription());
+        String reference = String.format("Expense id: %s", expense.getId());
+        transaction.setReference(reference);
+        String transactionCode = String.format("%s", System.currentTimeMillis());
+        transaction.setTransactionCode(transactionCode);
+        Integer transactionTypeId = mainConfig.getTransactionType().getExpenseId();
+        setTransactionType(transaction, transactionTypeId);
+
+        save(transaction);
+
+        TransactionExpenseDTO transactionExpenseDTO = new TransactionExpenseDTO();
+        transactionExpenseDTO.setExpenseId(expense.getId());
+        setTransactionExpense(transaction, transactionExpenseDTO);
+    }
+
+    @EventListener
+    public void handleIncomeCreated(IncomeCreatedEvent event) {
+        EIncome income = event.getIncome();
+        ETransaction transaction = new ETransaction();
+        transaction.setAmount(income.getAmount());
+        transaction.setCreatedOn(LocalDateTime.now());
+        transaction.setDescription(income.getDescription());
+        String reference = String.format("Income id: %s", income.getId());
+        transaction.setReference(reference);
+        String transactionCode = String.format("%s", System.currentTimeMillis());
+        transaction.setTransactionCode(transactionCode);
+        Integer transactionTypeId = mainConfig.getTransactionType().getIncomeId();
+        setTransactionType(transaction, transactionTypeId);
+
+        save(transaction);
+
+        TransactionIncomeDTO transactionIncomeDTO = new TransactionIncomeDTO();
+        transactionIncomeDTO.setIncomeId(income.getId());
+        setTransactionIncome(transaction, transactionIncomeDTO);
     }
 
     @Override

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -13,8 +14,7 @@ import org.springframework.stereotype.Service;
 import ke.kigen.api.configs.properties.MainConfig;
 import ke.kigen.api.dtos.expense.ExpenseDTO;
 import ke.kigen.api.dtos.general.PageDTO;
-import ke.kigen.api.dtos.payment.TransactionDTO;
-import ke.kigen.api.dtos.payment.TransactionExpenseDTO;
+import ke.kigen.api.events.ExpenseCreatedEvent;
 import ke.kigen.api.exceptions.NotFoundException;
 import ke.kigen.api.models.expense.EExpense;
 import ke.kigen.api.models.expense.EExpenseType;
@@ -22,7 +22,6 @@ import ke.kigen.api.models.status.EStatus;
 import ke.kigen.api.models.user.EUser;
 import ke.kigen.api.repositories.expense.ExpenseDAO;
 import ke.kigen.api.services.auth.IUserDetails;
-import ke.kigen.api.services.payment.transaction.ITransaction;
 import ke.kigen.api.services.status.IStatus;
 import ke.kigen.api.services.user.IUser;
 import ke.kigen.api.specifications.SpecBuilder;
@@ -33,13 +32,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SExpense implements IExpense {
     
+    private final ApplicationEventPublisher eventPublisher;
+
     private final ExpenseDAO expenseDAO;
 
     private final IExpenseType sExpenseType;
 
     private final IStatus sStatus;
-
-    private final ITransaction sTransaction;
 
     private final IUser sUser;
 
@@ -78,26 +77,8 @@ public class SExpense implements IExpense {
         setUser(expense, userId);
 
         save(expense);
-        createTransaction(expense);
+        eventPublisher.publishEvent(new ExpenseCreatedEvent(this, expense));
         return expense;
-    }
-
-    private void createTransaction(EExpense expense) {
-        TransactionDTO transactionDTO = new TransactionDTO();
-        transactionDTO.setAmount(expense.getAmount());
-        transactionDTO.setDescription(expense.getDescription());
-        String reference = String.format("Expense id: %s", expense.getId());
-        transactionDTO.setReference(reference);
-        String transactionCode = String.format("%s", System.currentTimeMillis());
-        transactionDTO.setTransactionCode(transactionCode);
-        Integer transactionTypeId = mainConfig.getTransactionType().getExpenseId();
-        transactionDTO.setTransactionTypeId(transactionTypeId);
-
-        TransactionExpenseDTO transactionExpenseDTO = new TransactionExpenseDTO();
-        transactionExpenseDTO.setExpenseId(expense.getId());
-        transactionDTO.setTransactionExpense(transactionExpenseDTO);
-
-        sTransaction.create(transactionDTO);
     }
 
     @Override
