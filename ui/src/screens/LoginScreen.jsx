@@ -148,7 +148,7 @@ const LoginScreen = () => {
               value={username}
               onChange={handleUsernameChange}
               InputProps={{
-                sx: { borderRadius: 5 }
+                sx: { borderRadius: 5, fontSize: '12px' }
               }}
             />
             <TextField
@@ -175,7 +175,7 @@ const LoginScreen = () => {
                     </IconButton>
                   </InputAdornment>
                 ),
-                sx: { borderRadius: 5 }
+                sx: { borderRadius: 5, fontSize: '12px' }
               }}
             />
             {loading ? (
