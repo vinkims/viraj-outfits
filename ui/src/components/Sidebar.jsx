@@ -4,8 +4,14 @@ import {
   Box, 
   Drawer, 
   IconButton, 
+  List, 
+  ListItem, 
+  ListItemButton, 
+  ListItemIcon, 
+  ListItemText, 
   Toolbar 
 } from "@mui/material";
+import CheckroomIcon from "@mui/icons-material/Checkroom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import MenuIcon from "@mui/icons-material/Menu";
 
@@ -67,6 +73,22 @@ const Sidebar = () => {
         <Link to="/dashboard" style={{ textDecoration: 'none', color: 'inherit' }}>
           <img src={vraj} alt="Logo" style={{ padding: '10px', boxSizing: 'border-box' }} />
         </Link> 
+
+        <List>
+          <ListItemButton component={Link} to="/dashboard" selected={location.pathname === '/dashboard'}>
+            <ListItemIcon>
+              <DashboardIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Dashboard" />
+          </ListItemButton>
+          <ListItemButton component={Link} to="/items" selected={location.pathname === "/items"}>
+            <ListItemIcon>
+              <CheckroomIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Items" />
+          </ListItemButton>
+        </List>
+
       </Drawer>
     </>
   );

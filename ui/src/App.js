@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Navigate, Route, Routes, useLocation } from "r
 
 import './global.css';
 import { AuthProvider, useAuth } from "./contexts/Auth";
-import { DashboardScreen, LoginScreen } from "./screens";
+import { DashboardScreen, ItemsScreen, LoginScreen } from "./screens";
 import { Sidebar } from "./components";
 
 const PrivateRoute = ({ element, ...rest }) => {
@@ -31,6 +31,7 @@ const sidebarPage = (Component) => {
 }
 
 const DashboardPage = sidebarPage(DashboardScreen);
+const ItemsPage = sidebarPage(ItemsScreen);
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
           <Route path="/login" element={<LoginScreen/>} />
           <Route path="/dashboard" element={<PrivateRoute element={<DashboardPage/>} />} />
           <Route path="/*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/items" element={<PrivateRoute element={<ItemsPage />} />} />
         </Routes>
       </Router>
     </AuthProvider>
