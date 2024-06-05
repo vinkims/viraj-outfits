@@ -150,6 +150,9 @@ const LoginScreen = () => {
               InputProps={{
                 sx: { borderRadius: 5, fontSize: '12px' }
               }}
+              InputLabelProps={{
+                sx: { fontSize: '14px' }
+              }}
             />
             <TextField
               name="password"
@@ -176,6 +179,9 @@ const LoginScreen = () => {
                   </InputAdornment>
                 ),
                 sx: { borderRadius: 5, fontSize: '12px' }
+              }}
+              InputLabelProps={{
+                sx: { fontSize: '14px' }
               }}
             />
             {loading ? (
