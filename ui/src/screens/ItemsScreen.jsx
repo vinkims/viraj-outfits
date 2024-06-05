@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Snackbar } from "@mui/material";
+import { Alert, Card, Container, Grid, Snackbar, TableContainer } from "@mui/material";
 
 import ServerCommunicationUtils from "../utils/ServerCommunicationUtils";
 
@@ -43,7 +43,15 @@ const ItemsScreen = () => {
   }
 
   return (
-    <div>Items Screen</div>
+    <Container sx={{ maxWidth: '100vw !important', justifyContent: 'center' }}>
+      <Grid container spacing={2}>
+        <Card>
+          <TableContainer>
+
+          </TableContainer>
+        </Card>
+      </Grid>
+    </Container>
   );
 }
 
