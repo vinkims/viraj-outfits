@@ -12,6 +12,7 @@ import {
   TableHead, 
   TableRow 
 } from "@mui/material";
+import moment from "moment";
 
 import ServerCommunicationUtils from "../utils/ServerCommunicationUtils";
 
@@ -87,6 +88,7 @@ const ItemsScreen = () => {
                   <TableCell>Category</TableCell>
                   <TableCell>Color</TableCell>
                   <TableCell>Size</TableCell>
+                  <TableCell>Date Added</TableCell>
                   <TableCell>Price</TableCell>
                 </TableRow>
               </TableHead>
@@ -101,6 +103,7 @@ const ItemsScreen = () => {
                     <TableCell>{row.category.name}</TableCell>
                     <TableCell>{row.color}</TableCell>
                     <TableCell>{row.size}</TableCell>
+                    <TableCell>{moment().format('Do MMMM YYYY', row.createdOn)}</TableCell>
                     <TableCell>{row.price}</TableCell>
                   </TableRow>
                 ))}
