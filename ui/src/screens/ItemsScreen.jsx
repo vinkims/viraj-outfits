@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { 
   Alert, 
-  Card, 
   Container, 
   Grid, 
+  Paper, 
   Snackbar, 
   Table, 
   TableBody, 
   TableCell, 
   TableContainer, 
-  TableHead, 
   TableRow 
 } from "@mui/material";
 import moment from "moment";
 
+import { TableHeader } from "../components";
 import ServerCommunicationUtils from "../utils/ServerCommunicationUtils";
 
 const ItemsScreen = () => {
@@ -22,6 +22,17 @@ const ItemsScreen = () => {
   const [ loading, setLoading ] = useState(false);
   const [ openAlert, setOpenAlert ] = useState(false);
   const [ severity, setSeverity ] = useState('success');
+
+  const headerLabels = [
+    { id: 'itemType', label: 'Item Type'},
+    { id: 'name', label: 'Name'},
+    { id: 'category', label: 'Category'},
+    { id: 'color', label: 'Color'},
+    { id: 'size', label: 'Size'},
+    { id: 'date', label: 'Date Added'},
+    { id: 'price', label: 'Price'},
+    { id: 'status', label: 'Status'}
+  ];
 
   useEffect(() => {
     getItems();
@@ -78,39 +89,30 @@ const ItemsScreen = () => {
   return (
     <Container sx={{ maxWidth: '100vw !important', justifyContent: 'center' }}>
       <Grid container spacing={2}>
-        <Card>
-          <TableContainer>
-            <Table sx={{ minWidth: 650 }}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Item Type</TableCell>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Category</TableCell>
-                  <TableCell>Color</TableCell>
-                  <TableCell>Size</TableCell>
-                  <TableCell>Date Added</TableCell>
-                  <TableCell>Price</TableCell>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }}>
+            <TableHeader
+              headerLabel={headerLabels}
+            />
+            <TableBody>
+              {items.map((row) => (
+                <TableRow
+                  key={row.id}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell>{row.itemType.name}</TableCell>
+                  <TableCell>{row.name}</TableCell>
+                  <TableCell>{row.category.name}</TableCell>
+                  <TableCell>{row.color}</TableCell>
+                  <TableCell>{row.size}</TableCell>
+                  <TableCell>{moment().format('Do MMMM YYYY', row.createdOn)}</TableCell>
+                  <TableCell>{row.price}</TableCell>
+                  <TableCell>{row.status.name}</TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {items.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                  >
-                    <TableCell>{row.itemType.name}</TableCell>
-                    <TableCell>{row.name}</TableCell>
-                    <TableCell>{row.category.name}</TableCell>
-                    <TableCell>{row.color}</TableCell>
-                    <TableCell>{row.size}</TableCell>
-                    <TableCell>{moment().format('Do MMMM YYYY', row.createdOn)}</TableCell>
-                    <TableCell>{row.price}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Card>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Grid>
       {showAlert()}
     </Container>
