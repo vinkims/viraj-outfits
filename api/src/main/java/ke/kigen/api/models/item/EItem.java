@@ -43,6 +43,9 @@ public class EItem implements Serializable {
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private EImage image;
 
+    @Column(name = "item_code")
+    private String itemCode;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_type_id", referencedColumnName = "id")
     private EItemType itemType;
@@ -52,6 +55,9 @@ public class EItem implements Serializable {
 
     @Column(name= "price")
     private BigDecimal price;
+
+    @Column(name= "selling_price")
+    private BigDecimal sellingPrice;
 
     @Column(name = "size")
     private String size;
