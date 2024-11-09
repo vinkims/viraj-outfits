@@ -15,7 +15,7 @@ import CheckroomIcon from "@mui/icons-material/Checkroom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import MenuIcon from "@mui/icons-material/Menu";
 
-import { logo } from "../assets";
+import { logo, minLogo } from "../assets";
 import { useAuth } from "../contexts/Auth";
 
 const Sidebar = () => {
