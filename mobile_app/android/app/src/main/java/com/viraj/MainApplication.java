@@ -1,4 +1,4 @@
-package com.trader;
+package com.viraj;
 
 import android.app.Application;
 import com.facebook.react.PackageList;

@@ -73,14 +73,14 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.trader"
+    namespace "com.viraj"
     defaultConfig {
-        applicationId "com.trader"
+        applicationId "com.viraj"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-        resValue "string", "build_config_package", "com.trader"
+        resValue "string", "build_config_package", "com.viraj"
         missingDimensionStrategy 'react-native-camera', 'mlkit'
     }
     signingConfigs {

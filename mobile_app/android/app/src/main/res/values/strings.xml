@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Trader</string>
+    <string name="app_name">Viraj</string>
     <string name="filter_view_trader_app">trader app filter</string>
     <string name="filter_view_https_trader">trader app filter(https)</string>
 </resources>
