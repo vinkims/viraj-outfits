@@ -45,10 +45,18 @@ const ItemsScreen = () => {
   const [ isItemTypeError, setIsItemTypeError ] = useState(false);
   const [ isItemTypeNameError, setIsItemTypeNameError ] = useState(false);
   const [ isNameError, setIsNameError ] = useState(false);
+  const [ isNewCategoryError, setIsNewCategoryError ] = useState(false);
+  const [ isNewColorError, setIsNewColorError ] = useState(false);
+  const [ isNewItemCodeError, setIsNewItemCodeError ] = useState(false);
+  const [ isNewItemTypeError, setIsNewItemTypeError ] = useState(false);
+  const [ isNewNameError, setIsNewNameError ] = useState(false);
+  const [ isNewPriceError, setIsNewPriceError ] = useState(false);
+  const [ isNewSizeError, setIsNewSizeError ] = useState(false);
   const [ isPriceError, setIsPriceError ] = useState(false);
   const [ isSizeError, setIsSizeError ] = useState(false);
   const [ itemCode, setItemCode ] = useState('');
   const [ itemCodeErrorText, setItemCodeErrorText ] = useState('');
+  const [ itemId, setItemId ] = useState(null);
   const [ items, setItems ] = useState([]);
   const [ itemTypeErrorText, setItemTypeErrorText ] = useState('');
   const [ itemTypeName, setItemTypeName ] = useState('');
@@ -57,10 +65,26 @@ const ItemsScreen = () => {
   const [ loading, setLoading ] = useState(false);
   const [ name, setName ] = useState('');
   const [ nameErrorText, setNameErrorText ] = useState('');
+  const [ newCategory, setNewCategory ] = useState('');
+  const [ newCategoryErrorText, setNewCategoryErrorText ] = useState('');
+  const [ newColor, setNewColor ] = useState('');
+  const [ newColorErrorText, setNewColorErrorText ] = useState('');
+  const [ newItemCode, setNewItemCode ] = useState('');
+  const [ newItemCodeErrorText, setNewItemCodeErrorText ] = useState('');
+  const [ newItemType, setNewItemType ] = useState(null);
+  const [ newItemTypeErrorText, setNewItemTypeErrorText ] = useState('');
+  const [ newName, setNewName ] = useState('');
+  const [ newNameErrorText, setNewNameErrorText ] = useState('');
+  const [ newPrice, setNewPrice ] = useState('');
+  const [ newPriceErrorText, setNewPriceErrorText ] = useState('');
+  const [ newSize, setNewSize ] = useState('');
+  const [ newSizeErrorText, setNewSizeErrorText ] = useState('');
   const [ openAddItem, setOpenAddItem ] = useState(false);
   const [ openAddItemType, setOpenAddItemType ] = useState(false);
   const [ openAlert, setOpenAlert ] = useState(false);
-  const [ page, setPage ] = useState(0);
+  const [ openEditItem, setOpenEditItem ] = useState(false);
+  const [ pageNumber, setPageNumber ] = useState(0);
+  const [ pageSize, setPageSize ] = useState(10);
   const [ price, setPrice ] = useState('');
   const [ priceErrorText, setPriceErrorText ] = useState('');
   const [ selectedCategory, setSelectedCategory ] = useState(null);
@@ -68,23 +92,25 @@ const ItemsScreen = () => {
   const [ severity, setSeverity ] = useState('success');
   const [ size, setSize ] = useState('');
   const [ sizeErrorText, setSizeErrorText ] = useState('');
+  const [ totalResults, setTotalResults ] = useState(0);
 
   const headerLabels = [
-    { id: 'itemCode', label: 'Item Code'},
-    { id: 'itemType', label: 'Item Type'},
-    { id: 'name', label: 'Name'},
-    { id: 'category', label: 'Category'},
-    { id: 'color', label: 'Color'},
-    { id: 'size', label: 'Size'},
-    { id: 'date', label: 'Date Added'},
-    { id: 'price', label: 'Buying Price'},
-    { id: 'status', label: 'Status'},
+    { id: 'itemCode', label: 'Item Code' },
+    { id: 'itemType', label: 'Item Type' },
+    { id: 'name', label: 'Name' },
+    { id: 'category', label: 'Category' },
+    { id: 'color', label: 'Color' },
+    { id: 'size', label: 'Size' },
+    { id: 'date', label: 'Date Added' },
+    { id: 'price', label: 'Buying Price' },
+    { id: 'sellingPrice', label: 'Selling Price' },
+    { id: 'status', label: 'Status' },
     { id: 'actions', label: 'Actions' }
   ];
 
   useEffect(() => {
     getItems();
-  }, []);
+  }, [pageNumber, pageSize]);
 
   useEffect(() => {
     getItemTypes();
@@ -114,6 +140,23 @@ const ItemsScreen = () => {
   const clearAddItemTypeDetails = () => {
     setItemTypeName('');
     setIsItemTypeNameError(false);
+  }
+
+  const clearEditItemDetails = () => {
+    setNewItemType(null);
+    setIsNewItemTypeError(false);
+    setNewName('');
+    setIsNewNameError(false);
+    setNewCategory(null);
+    setIsNewCategoryError(false);
+    setNewItemCode('');
+    setIsNewItemCodeError(false);
+    setNewColor('');
+    setIsNewColorError(false);
+    setNewSize('');
+    setIsNewSizeError(false);
+    setNewPrice('');
+    setIsNewPriceError(false);
   }
 
   const getCategories = async () => {
@@ -148,11 +191,16 @@ const ItemsScreen = () => {
   const getItems = async () => {
     setLoading(true);
 
-    await ServerCommunicationUtils.get('item')
-    .then(data => {
-      if (data.status === 200) {
+    let url = `item?pgSize=${pageSize}&pgNum=${pageNumber}`
+
+    await ServerCommunicationUtils.get(url)
+    .then(res => {
+      if (res.status === 200) {
         setLoading(false);
-        setItems(data.content.data);
+        setItems(res.content.data);
+        setPageNumber(res.content.pageInfo.pageNumber);
+        setPageSize(res.content.pageInfo.pageSize);
+        setTotalResults(res.content.pageInfo.totalResults);
       } else {
         setLoading(false);
         setOpenAlert(true);
@@ -235,10 +283,34 @@ const ItemsScreen = () => {
     setOpenAlert(false);
   }
 
+  const handleCloseEditItem = (event, reason) => {
+    if (reason === 'backdropClick') {
+      return;
+    }
+
+    setOpenEditItem(false);
+    clearEditItemDetails();
+  }
+
   const handleColorChange = (event) => {
     const colorValue = event.target.value;
     setColor(colorValue);
     setIsColorError(false);
+  }
+
+  const handleEditItem = (itemObj) => {
+    console.log("Item: ", itemObj);
+    setOpenEditItem(true);
+    setItemId(itemObj.id);
+    const currentItemType = itemTypes.find(itm => itm.id === itemObj.itemType.id);
+    setNewItemType(currentItemType);
+    setNewName(itemObj.name);
+    const currentCategory = categories.find(cat => cat.id === itemObj.category.id);
+    setNewCategory(currentCategory);
+    setNewItemCode(itemObj.itemCode);
+    setNewColor(itemObj.color);
+    setNewSize(itemObj.size);
+    setNewPrice(itemObj.price);
   }
 
   const handleItemCodeChange = (event) => {
@@ -263,10 +335,57 @@ const ItemsScreen = () => {
     setIsNameError(false);
   }
 
+  const handleNewCategorySelect = (_, value) => {
+    setNewCategory(value);
+  }
+
+  const handleNewColorChange = (event) => {
+    const colorValue = event.target.value;
+    setNewColor(colorValue);
+    setIsNewColorError(false);
+  }
+
+  const handleNewItemCodeChange = (event) => {
+    const codeValue = event.target.value;
+    setItemCode(codeValue);
+    setIsItemCodeError(false);
+  }
+
+  const handleNewItemTypeSelect = (_, value) => {
+    setNewItemType(value);
+  }
+
+  const handleNewNameChange = (event) => {
+    const nameValue = event.target.value;
+    setNewName(nameValue);
+    setIsNewNameError(false);
+  }
+
+  const handleNewPriceChange = (event) => {
+    const priceValue = event.target.value;
+    setNewPrice(priceValue);
+    setIsNewPriceError(false);
+  }
+
+  const handleNewSizeChange = (event) => {
+    const sizeValue = event.target.value;
+    setNewSize(sizeValue);
+    setIsNewSizeError(false);
+  }
+
+  const handlePageChange = (event, newPage) => {
+    setPageNumber(newPage);
+  }
+
   const handlePriceChange = (event) => {
     const priceValue = event.target.value;
     setPrice(priceValue);
     setIsPriceError(false);
+  }
+
+  const handleRowsPerPageChange = (event) => {
+    setPageNumber(0);
+    setPageSize(parseInt(event.target.value), 10);
   }
 
   const handleSaveItem = async () => {
@@ -334,7 +453,7 @@ const ItemsScreen = () => {
         logoutUser();
       } else {
         const alertMsg = res.status === 500
-          ? 'Item could not bre added. Try again later.'
+          ? 'Item could not be added. Try again later.'
           : res.detail;
         setLoading(false);
         setOpenAlert(true);
@@ -419,6 +538,92 @@ const ItemsScreen = () => {
     setIsSizeError(false);
   }
 
+  const handleUpdateItem = async () => {
+    const conditions = [
+      {
+        value: newItemType,
+        setError: setIsNewItemTypeError,
+        setErrorText: setNewItemTypeErrorText,
+        errorMessage: 'Please select item type'
+      },
+      {
+        value: newName,
+        setError: setIsNewNameError,
+        setErrorText: setNewNameErrorText,
+        errorMessage: 'Please enter name'
+      },
+      {
+        value: newCategory,
+        setError: setIsNewCategoryError,
+        setErrorText: setNewCategoryErrorText,
+        errorMessage: 'Please select category'
+      },
+      {
+        value: newColor,
+        setError: setIsNewColorError,
+        setErrorText: setNewColorErrorText,
+        errorMessage: 'Please enter color'
+      },
+      {
+        value: newPrice,
+        setError: setIsNewPriceError,
+        setErrorText: setNewPriceErrorText,
+        errorMessage: 'Please enter price'
+      }
+    ];
+
+    const errorMessages = ValidationUtils.validateInputs(conditions);
+
+    if (errorMessages.length > 0) {
+      return;
+    }
+
+    let payload = {};
+    payload.name = newName;
+    payload.itemTypeId = newItemType.id;
+    payload.categoryId = newCategory.id;
+    payload.itemCode = newItemCode;
+    payload.color = newColor;
+    payload.size = newSize;
+    payload.price = newPrice;
+
+    setLoading(true);
+
+    await ServerCommunicationUtils.patch(`item/${itemId}`, payload)
+    .then(res => {
+      if (res.status === 200) {
+        setLoading(false);
+        setOpenAlert(true);
+        setSeverity('success');
+        setAlertMessage('Item added successfully');
+        setOpenEditItem(false);
+        clearEditItemDetails();
+        getItems();
+      } else if (res.status === 403) {
+        logoutUser();
+      } else {
+        const alertMsg = res.status === 500
+          ? 'Item could not be updaed. Try again later.'
+          : res.detail;
+        setLoading(false);
+        setOpenAlert(true);
+        setSeverity('error');
+        setAlertMessage(alertMsg);
+      }
+    })
+    .catch(error => {
+      console.error("Error: ", error);
+      setLoading(false);
+      setOpenAlert(true);
+      setSeverity('error');
+      if (error.toString().includes('NetworkError when attempting to fetch resource')) {
+        setAlertMessage('Please check your internet connection');
+      } else {
+        setAlertMessage('Error updating item');
+      }
+    })
+  }
+
   const logoutUser = () => {
     logout();
     navigate("/login");
@@ -469,6 +674,7 @@ const ItemsScreen = () => {
                   <TableCell>{row.size}</TableCell>
                   <TableCell>{FormattingUtils.formatDate(row.createdOn)}</TableCell>
                   <TableCell>{row.price}</TableCell>
+                  <TableCell>{row.sellingPrice}</TableCell>
                   <TableCell>{row.status.name}</TableCell>
                   <TableCell>
                     <Box>
@@ -476,6 +682,7 @@ const ItemsScreen = () => {
                         variant="outlined"
                         startIcon={<Iconify icon="eva:edit-fill" />}
                         sx={{ marginRight: 2, textTransform: 'none' }}
+                        onClick={() => handleEditItem(row)}
                       >
                         Edit
                       </Button>
@@ -496,9 +703,15 @@ const ItemsScreen = () => {
           </Table>
         </TableContainer>
         
-        {/* <TablePagination
-          page={page}
-        /> */}
+        <TablePagination
+          page={pageNumber}
+          component="div"
+          count={totalResults}
+          rowsPerPage={pageSize}
+          onPageChange={handlePageChange}
+          rowsPerPageOptions={[10, 20, 50, 100]}
+          onRowsPerPageChange={handleRowsPerPageChange}
+        />
 
         <Dialog
           open={openAddItem}
@@ -648,6 +861,119 @@ const ItemsScreen = () => {
               </Box>
             </Box>
           )}
+        </Dialog>
+
+        <Dialog
+          open={openEditItem}
+          onClose={handleCloseEditItem}
+          PaperProps={{ sx: { width: "500px" } }}
+        >
+          <DialogTitle>Edit Item</DialogTitle>
+          <DialogContent>
+            <Box display="flex" justifyContent="space-between" width="100%">
+              <Autocomplete
+                value={newItemType}
+                onChange={handleNewItemTypeSelect}
+                options={itemTypes}
+                sx={{ flex: 1 }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    margin="dense"
+                    label="Item Type"
+                    variant="outlined"
+                    required
+                    error={isNewItemTypeError}
+                    helperText={isNewItemTypeError ? newItemTypeErrorText : ''}
+                  />
+                )}
+              />
+              <TextField
+                margin="dense"
+                label="Name"
+                name="name"
+                sx={{ marginLeft: "10px", flex: 1}}
+                required
+                error={isNewNameError}
+                helperText={isNewNameError ? newNameErrorText : ''}
+                value={newName}
+                onChange={handleNewNameChange}
+              />
+            </Box>
+            <Box display="flex" justifyContent="space-between" width="100%" marginTop="10px">
+              <Autocomplete
+                value={newCategory}
+                onChange={handleNewCategorySelect}
+                options={categories}
+                sx={{ flex: 1 }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    margin="dense"
+                    label="Category"
+                    variant="outlined"
+                    required
+                    error={isNewCategoryError}
+                    helperText={isNewCategoryError ? newCategoryErrorText : ''}
+                  />
+                )}
+              />
+              <TextField
+                margin="dense"
+                label="Item Code"
+                name="itemCode"
+                sx={{ marginLeft: "10px", flex: 1 }}
+                error={isNewItemCodeError}
+                helperText={isNewItemCodeError ? newItemCodeErrorText : ''}
+                value={newItemCode}
+                onChange={handleNewItemCodeChange}
+              />
+            </Box>
+            <Box display="flex" justifyContent="space-between" width="100%" marginTop="10px">
+              <TextField
+                margin="dense"
+                label="Color"
+                name="color"
+                required
+                sx={{ flex:1 }}
+                error={isNewColorError}
+                helperText={isNewColorError ? newColorErrorText : ''}
+                value={newColor}
+                onChange={handleNewColorChange}
+              />
+              <TextField
+                margin="dense"
+                label="Size"
+                name="size"
+                sx={{ flex: 1, marginLeft: "10px" }}
+                error={isNewSizeError}
+                helperText={isNewSizeError ? newSizeErrorText : ''}
+                value={newSize}
+                onChange={handleNewSizeChange}
+              />
+              <TextField
+                margin="dense"
+                label="Price"
+                name="price"
+                sx={{ flex: 1, marginLeft: "10px" }}
+                required
+                error={isNewPriceError}
+                helperText={isNewPriceError ? newPriceErrorText : ''}
+                value={newPrice}
+                onChange={handleNewPriceChange}
+              />
+            </Box>
+          </DialogContent>
+          <Box display="flex" justifyContent="center" marginTop="5px" marginBottom="10px">
+            {loading ? (
+              <CircularProgress color="inherit" size={20} />
+            ) : (
+              <>
+                <Button onClick={handleCloseEditItem} sx={{ bgcolor: '#F13C15', color: "black" }}>Cancel</Button>
+                <Button onClick={handleUpdateItem} sx={{ bgcolor: '#79AA45', color: "black", marginLeft: "20px" }}>Save</Button>
+              </>
+            )}
+          </Box>
         </Dialog>
 
       </Grid>

@@ -37,7 +37,8 @@
     "react-native-screens": "^3.25.0",
     "react-native-square-in-app-payments": "^1.7.5",
     "react-native-svg": "^12.1.1",
-    "react-native-vector-icons": "^10.0.2"
+    "react-native-vector-icons": "^10.0.2",
+    "trader": "file:"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
