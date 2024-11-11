@@ -65,6 +65,26 @@ const ItemsScreen = () => {
   const [ isSizeError, setIsSizeError ] = useState(false);
   const [ itemCode, setItemCode ] = useState('');
   const [ itemCodeErrorText, setItemCodeErrorText ] = useState('');
+  const initialItemForm = {
+    itemType: null,
+    name: '',
+    category: null,
+    itemCode: '',
+    color: '',
+    size: '',
+    price: ''
+  };
+  const initialItemFormErrors = {
+    itemType: false,
+    name: false,
+    category: false,
+    itemCode: false,
+    color: false,
+    size: false,
+    price: false
+  }
+  const [ itemForm, setItemForm ] = useState(initialItemForm);
+  const [ itemFormErrors, setItemFormErrors ] = useState(initialItemFormErrors);
   const [ itemId, setItemId ] = useState(null);
   const [ items, setItems ] = useState([]);
   const [ itemTypeErrorText, setItemTypeErrorText ] = useState('');
@@ -166,6 +186,11 @@ const ItemsScreen = () => {
     setIsNewSizeError(false);
     setNewPrice('');
     setIsNewPriceError(false);
+  }
+
+  const clearFormDetails = () => {
+    setItemForm(initialItemForm);
+    setItemFormErrors(initialItemFormErrors);
   }
 
   const getCategories = async () => {
@@ -304,7 +329,7 @@ const ItemsScreen = () => {
       return;
     }
     setOpenAddItem(false);
-    clearAddItemDetails();
+    clearFormDetails();
   }
 
   const handleCloseAddItemType = (event, reason) => {
@@ -361,6 +386,18 @@ const ItemsScreen = () => {
     setNewColor(itemObj.color);
     setNewSize(itemObj.size);
     setNewPrice(itemObj.price);
+  }
+
+  const handleInputChange = (field) => (event) => {
+    const value = event.target.value;
+    setItemForm((prevForm) => ({
+      ...prevForm,
+      [field]: value
+    }));
+    setItemFormErrors((prevErrors) => ({
+      ...prevErrors,
+      [field]: false // reset error on state change
+    }));
   }
 
   const handleItemCodeChange = (event) => {
@@ -439,53 +476,57 @@ const ItemsScreen = () => {
   }
 
   const handleSaveItem = async () => {
-    const conditions = [
-      {
-        value: selectedItemType,
-        setError: setIsItemTypeError,
-        setErrorText: setItemTypeErrorText,
-        errorMessage: 'Please select item type'
-      },
-      {
-        value: name,
-        setError: setIsNameError,
-        setErrorText: setNameErrorText,
-        errorMessage: 'Please enter name'
-      },
-      {
-        value: selectedCategory,
-        setError: setIsCategoryError,
-        setErrorText: setCategoryErrorText,
-        errorMessage: 'Please select category'
-      },
-      {
-        value: color,
-        setError: setIsColorError,
-        setErrorText: setColorErrorText,
-        errorMessage: 'Please enter color'
-      },
-      {
-        value: price,
-        setError: setIsPriceError,
-        setErrorText: setPriceErrorText,
-        errorMessage: 'Please enter price'
-      }
-    ];
+    // const conditions = [
+    //   {
+    //     value: selectedItemType,
+    //     setError: setIsItemTypeError,
+    //     setErrorText: setItemTypeErrorText,
+    //     errorMessage: 'Please select item type'
+    //   },
+    //   {
+    //     value: name,
+    //     setError: setIsNameError,
+    //     setErrorText: setNameErrorText,
+    //     errorMessage: 'Please enter name'
+    //   },
+    //   {
+    //     value: selectedCategory,
+    //     setError: setIsCategoryError,
+    //     setErrorText: setCategoryErrorText,
+    //     errorMessage: 'Please select category'
+    //   },
+    //   {
+    //     value: color,
+    //     setError: setIsColorError,
+    //     setErrorText: setColorErrorText,
+    //     errorMessage: 'Please enter color'
+    //   },
+    //   {
+    //     value: price,
+    //     setError: setIsPriceError,
+    //     setErrorText: setPriceErrorText,
+    //     errorMessage: 'Please enter price'
+    //   }
+    // ];
 
-    const errorMessages = ValidationUtils.validateInputs(conditions);
+    // const errorMessages = ValidationUtils.validateInputs(conditions);
 
-    if (errorMessages.length > 0) {
+    // if (errorMessages.length > 0) {
+    //   return;
+    // }
+
+    if (!validateForm()) {
       return;
     }
 
     let payload = {};
-    payload.name = name;
-    payload.itemTypeId = selectedItemType.id;
-    payload.categoryId = selectedCategory.id;
-    payload.itemCode = itemCode;
-    payload.color = color;
-    payload.size = size;
-    payload.price = price;
+    payload.name = itemForm.name;
+    payload.itemTypeId = itemForm.itemType?.id;
+    payload.categoryId = itemForm.category?.id;
+    payload.itemCode = itemForm.itemCode;
+    payload.color = itemForm.color;
+    payload.size = itemForm.size;
+    payload.price = itemForm.price;
 
     setLoading(true);
 
@@ -653,7 +694,7 @@ const ItemsScreen = () => {
         logoutUser();
       } else {
         const alertMsg = res.status === 500
-          ? 'Item could not be updaed. Try again later.'
+          ? 'Item could not be updated. Try again later.'
           : res.detail;
         setLoading(false);
         setOpenAlert(true);
@@ -677,6 +718,36 @@ const ItemsScreen = () => {
   const logoutUser = () => {
     logout();
     navigate("/login");
+  }
+
+  const validateForm = () => {
+    const errors = {};
+
+    if (!itemForm.itemType) {
+      errors.itemType = true;
+    }
+    if (!itemForm.name) {
+      errors.name = true;
+    }
+    if (!itemForm.category) {
+      errors.category = true;
+    }
+    if (!itemForm.itemCode) {
+      errors.itemCode = true;
+    }
+    if (!itemForm.color) {
+      errors.color = true;
+    }
+    if (!itemForm.size) {
+      errors.size = true;
+    }
+    if (!itemForm.price) {
+      errors.price = true;
+    }
+
+    setItemFormErrors(errors);
+
+    return Object.keys(errors).length === 0;
   }
 
   const showAlert = () => {
@@ -798,12 +869,12 @@ const ItemsScreen = () => {
                 margin="dense"
                 label="Name"
                 name="name"
-                error={isNameError}
-                helperText={isNameError ? nameErrorText : ''}
+                error={itemFormErrors.name}
+                helperText={itemFormErrors.name && 'Please enter a valid name'}
                 required
                 sx={{ marginLeft: "10px", flex: 1 }}
-                value={name}
-                onChange={handleNameChange}
+                value={itemForm.name}
+                onChange={handleInputChange('name')}
               />
             </Box>
             <Box display="flex" justifyContent="space-between" width="100%" marginTop="10px">
