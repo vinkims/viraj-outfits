@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { 
+import {  
   Box, 
   Drawer, 
   IconButton, 
@@ -9,13 +9,13 @@ import {
   ListItemButton, 
   ListItemIcon, 
   ListItemText, 
-  Toolbar 
+  Toolbar
 } from "@mui/material";
 import CheckroomIcon from "@mui/icons-material/Checkroom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import MenuIcon from "@mui/icons-material/Menu";
 
-import { vraj } from "../assets";
+import { logo, minLogo } from "../assets";
 import { useAuth } from "../contexts/Auth";
 
 const Sidebar = () => {
@@ -71,7 +71,7 @@ const Sidebar = () => {
 
         {/* Logo section */}
         <Link to="/dashboard" style={{ textDecoration: 'none', color: 'inherit' }}>
-          <img src={vraj} alt="Logo" style={{ padding: '10px', boxSizing: 'border-box' }} />
+          <img src={logo} alt="Logo" style={{ padding: '10px', boxSizing: 'border-box', height: '150px', width: '150px', alignSelf: 'center' }} />
         </Link> 
 
         <List>

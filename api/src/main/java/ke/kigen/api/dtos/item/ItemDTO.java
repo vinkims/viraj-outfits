@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import ke.kigen.api.annotations.IsItemCodeValid;
 import ke.kigen.api.dtos.category.CategoryDTO;
 import ke.kigen.api.dtos.status.StatusDTO;
 import ke.kigen.api.models.item.EItem;
@@ -27,6 +28,9 @@ public class ItemDTO {
 
     private String name;
 
+    @IsItemCodeValid
+    private String itemCode;
+
     private CategoryDTO category;
 
     private Integer categoryId;
@@ -36,6 +40,8 @@ public class ItemDTO {
     private String size;
 
     private BigDecimal price;
+
+    private BigDecimal sellingPrice;
 
     private ImageDTO image;
 
@@ -57,9 +63,11 @@ public class ItemDTO {
         if (item.getImage() != null) {
             setImage(new ImageDTO(item.getImage()));
         }
+        setItemCode(item.getItemCode());
         setItemType(new ItemTypeDTO(item.getItemType()));
         setName(item.getName());
         setPrice(item.getPrice());
+        setSellingPrice(item.getSellingPrice());
         setSize(item.getSize());
         setStatus(new StatusDTO(item.getStatus()));
         setUpdatedOn(item.getUpdatedOn());

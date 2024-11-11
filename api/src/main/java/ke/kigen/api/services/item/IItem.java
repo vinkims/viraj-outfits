@@ -19,14 +19,18 @@ public interface IItem {
         "color",
         "createdOn",
         "image.id",
+        "itemCode",
         "itemType.id",
         "itemType.name",
         "price",
+        "sellingPrice",
         "size",
         "updatedOn"
     );
 
     Specification<EItem> buildFilterSpec(String searchQuery);
+
+    Boolean checkExistsByItemCode(String itemCode);
 
     EItem create(ItemDTO itemDTO);
 

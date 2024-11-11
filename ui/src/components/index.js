@@ -1,5 +1,11 @@
+import AddButton from "./AddButton";
+import Iconify from "./Iconify";
 import Sidebar from "./Sidebar";
+import TableHeader from "./TableHeader";
 
 export {
-  Sidebar
+  AddButton,
+  Iconify,
+  Sidebar, 
+  TableHeader
 }

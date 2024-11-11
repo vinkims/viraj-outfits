@@ -62,12 +62,18 @@ public class SItem implements IItem {
     }
 
     @Override
+    public Boolean checkExistsByItemCode(String itemCode) {
+        return itemDAO.existsByItemCode(itemCode);
+    }
+
+    @Override
     public EItem create(ItemDTO itemDTO) {
         EItem item = new EItem();
         setCategory(item, itemDTO.getCategoryId());
         item.setColor(itemDTO.getColor());
         item.setCreatedOn(LocalDateTime.now());
         setImage(item, itemDTO.getImage());
+        item.setItemCode(itemDTO.getItemCode());
         setItemType(item, itemDTO.getItemTypeId());
         item.setName(itemDTO.getName());
         item.setPrice(itemDTO.getPrice());
@@ -150,7 +156,7 @@ public class SItem implements IItem {
 
         EItem item = getById(itemId, true);
 
-        String[] fields = {"Color", "Name", "Price", "Size"};
+        String[] fields = {"Color", "Name", "Price", "Size", "ItemCode"};
         for (String field : fields) {
             Method getField = ItemDTO.class.getMethod(String.format("get%s",field));
             Object fieldValue = getField.invoke(itemDTO);

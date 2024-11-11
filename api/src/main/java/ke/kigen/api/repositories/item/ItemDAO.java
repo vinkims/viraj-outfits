@@ -7,4 +7,5 @@ import ke.kigen.api.models.item.EItem;
 
 public interface ItemDAO extends JpaRepository<EItem, Integer>, JpaSpecificationExecutor<EItem> {
     
+    Boolean existsByItemCode(String itemCode);
 }
