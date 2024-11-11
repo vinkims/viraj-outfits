@@ -39,6 +39,15 @@ const ItemsScreen = () => {
   const [ categoryErrorText, setCategoryErrorText ] = useState('');
   const [ color, setColor ] = useState('');
   const [ colorErrorText, setColorErrorText ] = useState('');
+  const [ initialItem, setInitialItem ] = useState({
+    itemType: null,
+    name: '',
+    category: null,
+    itemCode: '',
+    color: '',
+    size: '',
+    price: 0
+  });
   const [ isCategoryError, setIsCategoryError ] = useState(false);
   const [ isColorError, setIsColorError ] = useState(false);
   const [ isItemCodeError, setIsItemCodeError ] = useState(false);
@@ -250,6 +259,34 @@ const ItemsScreen = () => {
     })
   }
 
+  const getUpdatedFields = () => {
+    const updatedFields = {};
+
+    if (newItemType?.id !== initialItem.itemType?.id) {
+      updatedFields.itemTypeId = newItemType.id;
+    }
+    if (newName !== initialItem.name) {
+      updatedFields.name = newName;
+    }
+    if (newCategory?.id !== initialItem.category?.id) {
+      updatedFields.categoryId = newCategory.id;
+    }
+    if (newItemCode !== initialItem.itemCode) {
+      updatedFields.itemCode = newItemCode;
+    }
+    if (newColor !== initialItem.color) {
+      updatedFields.color = newColor;
+    }
+    if (newSize !== initialItem.size) {
+      updatedFields.size = newSize;
+    }
+    if (newPrice !== initialItem.price) {
+      updatedFields.price = newPrice;
+    }
+
+    return updatedFields;
+  }
+
   const handleAddItem = () => {
     setOpenAddItem(true);
   }
@@ -302,10 +339,23 @@ const ItemsScreen = () => {
     console.log("Item: ", itemObj);
     setOpenEditItem(true);
     setItemId(itemObj.id);
+
     const currentItemType = itemTypes.find(itm => itm.id === itemObj.itemType.id);
+    const currentCategory = categories.find(cat => cat.id === itemObj.category.id);
+
+    // set initial values
+    setInitialItem({
+      itemType: currentItemType,
+      name: itemObj.name,
+      category: currentCategory,
+      itemCode: itemObj.itemCode,
+      color: itemObj.color,
+      size: itemObj.size,
+      price: itemObj.price
+    });
+
     setNewItemType(currentItemType);
     setNewName(itemObj.name);
-    const currentCategory = categories.find(cat => cat.id === itemObj.category.id);
     setNewCategory(currentCategory);
     setNewItemCode(itemObj.itemCode);
     setNewColor(itemObj.color);
@@ -578,24 +628,24 @@ const ItemsScreen = () => {
       return;
     }
 
-    let payload = {};
-    payload.name = newName;
-    payload.itemTypeId = newItemType.id;
-    payload.categoryId = newCategory.id;
-    payload.itemCode = newItemCode;
-    payload.color = newColor;
-    payload.size = newSize;
-    payload.price = newPrice;
+    const updatedFields = getUpdatedFields();
+
+    if (Object.keys(updatedFields).length === 0) {
+      setOpenAlert(true);
+      setSeverity('info');
+      setAlertMessage("No changes detected");
+      return;
+    }
 
     setLoading(true);
 
-    await ServerCommunicationUtils.patch(`item/${itemId}`, payload)
+    await ServerCommunicationUtils.patch(`item/${itemId}`, updatedFields)
     .then(res => {
       if (res.status === 200) {
         setLoading(false);
         setOpenAlert(true);
         setSeverity('success');
-        setAlertMessage('Item added successfully');
+        setAlertMessage('Item updated successfully');
         setOpenEditItem(false);
         clearEditItemDetails();
         getItems();
