@@ -36,24 +36,8 @@ const ItemsScreen = () => {
   const navigate = useNavigate();
   const [ alertMessage, setAlertMessage ] = useState('');
   const [ categories, setCategories ] = useState('');
-  const [ categoryErrorText, setCategoryErrorText ] = useState('');
-  const [ color, setColor ] = useState('');
-  const [ colorErrorText, setColorErrorText ] = useState('');
-  const [ initialItem, setInitialItem ] = useState({
-    itemType: null,
-    name: '',
-    category: null,
-    itemCode: '',
-    color: '',
-    size: '',
-    price: 0
-  });
-  const [ isCategoryError, setIsCategoryError ] = useState(false);
-  const [ isColorError, setIsColorError ] = useState(false);
   const [ isItemCodeError, setIsItemCodeError ] = useState(false);
-  const [ isItemTypeError, setIsItemTypeError ] = useState(false);
   const [ isItemTypeNameError, setIsItemTypeNameError ] = useState(false);
-  const [ isNameError, setIsNameError ] = useState(false);
   const [ isNewCategoryError, setIsNewCategoryError ] = useState(false);
   const [ isNewColorError, setIsNewColorError ] = useState(false);
   const [ isNewItemCodeError, setIsNewItemCodeError ] = useState(false);
@@ -61,10 +45,7 @@ const ItemsScreen = () => {
   const [ isNewNameError, setIsNewNameError ] = useState(false);
   const [ isNewPriceError, setIsNewPriceError ] = useState(false);
   const [ isNewSizeError, setIsNewSizeError ] = useState(false);
-  const [ isPriceError, setIsPriceError ] = useState(false);
-  const [ isSizeError, setIsSizeError ] = useState(false);
   const [ itemCode, setItemCode ] = useState('');
-  const [ itemCodeErrorText, setItemCodeErrorText ] = useState('');
   const initialItemForm = {
     itemType: null,
     name: '',
@@ -87,13 +68,10 @@ const ItemsScreen = () => {
   const [ itemFormErrors, setItemFormErrors ] = useState(initialItemFormErrors);
   const [ itemId, setItemId ] = useState(null);
   const [ items, setItems ] = useState([]);
-  const [ itemTypeErrorText, setItemTypeErrorText ] = useState('');
   const [ itemTypeName, setItemTypeName ] = useState('');
   const [ itemTypeNameErrorText, setItemTypeNameErrorText ] = useState('');
   const [ itemTypes, setItemTypes ] = useState([]);
   const [ loading, setLoading ] = useState(false);
-  const [ name, setName ] = useState('');
-  const [ nameErrorText, setNameErrorText ] = useState('');
   const [ newCategory, setNewCategory ] = useState('');
   const [ newCategoryErrorText, setNewCategoryErrorText ] = useState('');
   const [ newColor, setNewColor ] = useState('');
@@ -114,13 +92,7 @@ const ItemsScreen = () => {
   const [ openEditItem, setOpenEditItem ] = useState(false);
   const [ pageNumber, setPageNumber ] = useState(0);
   const [ pageSize, setPageSize ] = useState(10);
-  const [ price, setPrice ] = useState('');
-  const [ priceErrorText, setPriceErrorText ] = useState('');
-  const [ selectedCategory, setSelectedCategory ] = useState(null);
-  const [ selectedItemType, setSelectedItemType ] = useState(null);
   const [ severity, setSeverity ] = useState('success');
-  const [ size, setSize ] = useState('');
-  const [ sizeErrorText, setSizeErrorText ] = useState('');
   const [ totalResults, setTotalResults ] = useState(0);
 
   const headerLabels = [
@@ -148,23 +120,6 @@ const ItemsScreen = () => {
   useEffect(() => {
     getCategories();
   }, []);
-
-  const clearAddItemDetails = () => {
-    setSelectedItemType(null);
-    setIsItemTypeError(false);
-    setName('');
-    setIsNameError(false);
-    setSelectedCategory(null);
-    setIsCategoryError(false);
-    setItemCode('');
-    setIsItemCodeError(false);
-    setColor('');
-    setIsColorError(false);
-    setSize('');
-    setIsSizeError(false);
-    setPrice('');
-    setIsPriceError(false);
-  }
 
   const clearAddItemTypeDetails = () => {
     setItemTypeName('');
@@ -287,25 +242,25 @@ const ItemsScreen = () => {
   const getUpdatedFields = () => {
     const updatedFields = {};
 
-    if (newItemType?.id !== initialItem.itemType?.id) {
+    if (newItemType?.id !== itemForm.itemType?.id) {
       updatedFields.itemTypeId = newItemType.id;
     }
-    if (newName !== initialItem.name) {
+    if (newName !== itemForm.name) {
       updatedFields.name = newName;
     }
-    if (newCategory?.id !== initialItem.category?.id) {
+    if (newCategory?.id !== itemForm.category?.id) {
       updatedFields.categoryId = newCategory.id;
     }
-    if (newItemCode !== initialItem.itemCode) {
+    if (newItemCode !== itemForm.itemCode) {
       updatedFields.itemCode = newItemCode;
     }
-    if (newColor !== initialItem.color) {
+    if (newColor !== itemForm.color) {
       updatedFields.color = newColor;
     }
-    if (newSize !== initialItem.size) {
+    if (newSize !== itemForm.size) {
       updatedFields.size = newSize;
     }
-    if (newPrice !== initialItem.price) {
+    if (newPrice !== itemForm.price) {
       updatedFields.price = newPrice;
     }
 
@@ -318,10 +273,6 @@ const ItemsScreen = () => {
 
   const handleAddItemType = () => {
     setOpenAddItemType(true);
-  }
-
-  const handleCategorySelect = (_, value) => {
-    setSelectedCategory(value);
   }
 
   const handleCloseAddItem = (event, reason) => {
@@ -354,12 +305,6 @@ const ItemsScreen = () => {
     clearEditItemDetails();
   }
 
-  const handleColorChange = (event) => {
-    const colorValue = event.target.value;
-    setColor(colorValue);
-    setIsColorError(false);
-  }
-
   const handleEditItem = (itemObj) => {
     console.log("Item: ", itemObj);
     setOpenEditItem(true);
@@ -369,13 +314,13 @@ const ItemsScreen = () => {
     const currentCategory = categories.find(cat => cat.id === itemObj.category.id);
 
     // set initial values
-    setInitialItem({
+    setItemForm({
       itemType: currentItemType,
       name: itemObj.name,
       category: currentCategory,
-      itemCode: itemObj.itemCode,
+      itemCode: itemObj.itemCode || '0',
       color: itemObj.color,
-      size: itemObj.size,
+      size: itemObj.size || "",
       price: itemObj.price
     });
 
@@ -400,26 +345,21 @@ const ItemsScreen = () => {
     }));
   }
 
-  const handleItemCodeChange = (event) => {
-    const codeValue = event.target.value;
-    setItemCode(codeValue);
-    setIsItemCodeError(false);
+  const handleInputSelect = (field) => (_, event) => {
+    setItemForm((prevForm) => ({
+      ...prevForm,
+      [field]: event
+    }));
+    setItemFormErrors((prevErrors) => ({
+      ...prevErrors,
+      [field]: false
+    }));
   }
 
   const handleItemTypeNameChange = (event) => {
     const typeName = event.target.value;
     setItemTypeName(typeName);
     setIsItemTypeNameError(false);
-  }
-
-  const handleItemTypeSelect = (_, value) => {
-    setSelectedItemType(value);
-  }
-
-  const handleNameChange = (event) => {
-    const nameValue = event.target.value;
-    setName(nameValue);
-    setIsNameError(false);
   }
 
   const handleNewCategorySelect = (_, value) => {
@@ -464,57 +404,12 @@ const ItemsScreen = () => {
     setPageNumber(newPage);
   }
 
-  const handlePriceChange = (event) => {
-    const priceValue = event.target.value;
-    setPrice(priceValue);
-    setIsPriceError(false);
-  }
-
   const handleRowsPerPageChange = (event) => {
     setPageNumber(0);
     setPageSize(parseInt(event.target.value), 10);
   }
 
   const handleSaveItem = async () => {
-    // const conditions = [
-    //   {
-    //     value: selectedItemType,
-    //     setError: setIsItemTypeError,
-    //     setErrorText: setItemTypeErrorText,
-    //     errorMessage: 'Please select item type'
-    //   },
-    //   {
-    //     value: name,
-    //     setError: setIsNameError,
-    //     setErrorText: setNameErrorText,
-    //     errorMessage: 'Please enter name'
-    //   },
-    //   {
-    //     value: selectedCategory,
-    //     setError: setIsCategoryError,
-    //     setErrorText: setCategoryErrorText,
-    //     errorMessage: 'Please select category'
-    //   },
-    //   {
-    //     value: color,
-    //     setError: setIsColorError,
-    //     setErrorText: setColorErrorText,
-    //     errorMessage: 'Please enter color'
-    //   },
-    //   {
-    //     value: price,
-    //     setError: setIsPriceError,
-    //     setErrorText: setPriceErrorText,
-    //     errorMessage: 'Please enter price'
-    //   }
-    // ];
-
-    // const errorMessages = ValidationUtils.validateInputs(conditions);
-
-    // if (errorMessages.length > 0) {
-    //   return;
-    // }
-
     if (!validateForm()) {
       return;
     }
@@ -538,7 +433,7 @@ const ItemsScreen = () => {
         setSeverity('success');
         setAlertMessage('Item added successfully');
         setOpenAddItem(false);
-        clearAddItemDetails();
+        clearFormDetails();
         getItems();
       } else if (res.status === 403){
         logoutUser();
@@ -621,12 +516,6 @@ const ItemsScreen = () => {
         setAlertMessage('Error adding item type');
       }
     })
-  }
-
-  const handleSizeChange = (event) => {
-    const sizeValue = event.target.value;
-    setSize(sizeValue);
-    setIsSizeError(false);
   }
 
   const handleUpdateItem = async () => {
@@ -849,8 +738,8 @@ const ItemsScreen = () => {
           >
             <Box display="flex" justifyContent="space-between" width="100%">
               <Autocomplete
-                value={selectedItemType}
-                onChange={handleItemTypeSelect}
+                value={itemForm.itemType}
+                onChange={handleInputSelect('itemType')}
                 options={itemTypes}
                 sx={{ flex:1 }}
                 renderInput={(params) => (
@@ -860,8 +749,8 @@ const ItemsScreen = () => {
                     variant="outlined"
                     required
                     margin="dense"
-                    error={isItemTypeError}
-                    helperText={isItemTypeError ? itemTypeErrorText : ''}
+                    error={itemFormErrors.itemType}
+                    helperText={itemFormErrors.itemType && 'Please select item type'}
                   />
                 )}
               />
@@ -879,8 +768,8 @@ const ItemsScreen = () => {
             </Box>
             <Box display="flex" justifyContent="space-between" width="100%" marginTop="10px">
               <Autocomplete
-                value={selectedCategory}
-                onChange={handleCategorySelect}
+                value={itemForm.category}
+                onChange={handleInputSelect('category')}
                 options={categories}
                 sx={{ flex: 1 }}
                 renderInput={(params) => (
@@ -890,8 +779,8 @@ const ItemsScreen = () => {
                     label="Category"
                     variant="outlined"
                     required
-                    error={isCategoryError}
-                    helperText={isCategoryError ? categoryErrorText : ''}
+                    error={itemFormErrors.category}
+                    helperText={itemFormErrors.category && 'Please select category'}
                   />
                 )}
               />
@@ -899,11 +788,9 @@ const ItemsScreen = () => {
                 margin="dense"
                 label="Item Code"
                 name="itemCode"
-                error={isItemCodeError}
-                helperText={isItemCodeError ? itemCodeErrorText : ''}
                 sx={{ marginLeft: "10px", flex: 1 }}
-                value={itemCode}
-                onChange={handleItemCodeChange}
+                value={itemForm.itemCode}
+                onChange={handleInputChange('itemCode')}
               />
             </Box>
             <Box display="flex" justifyContent="space-between" width="100%" marginTop="10px">
@@ -911,32 +798,30 @@ const ItemsScreen = () => {
                 margin="dense"
                 label="Color"
                 name="color"
-                error={isColorError}
-                helperText={isColorError ? colorErrorText : ''}
-                value={color}
+                error={itemFormErrors.color}
+                helperText={itemFormErrors.color && 'Please enter color'}
+                value={itemForm.color}
                 required
-                onChange={handleColorChange}
+                onChange={handleInputChange('color')}
                 sx={{ flex: 1 }}
               />
               <TextField
                 margin="dense"
                 label="Size"
                 name="size"
-                error={isSizeError}
-                helperText={isSizeError ? sizeErrorText : ''}
-                value={size}
-                onChange={handleSizeChange}
+                value={itemForm.size}
+                onChange={handleInputChange('size')}
                 sx={{ flex: 1, marginLeft: "10px" }}
               />
               <TextField
                 margin="dense"
                 label="Price"
                 name="price"
-                error={isPriceError}
-                helperText={isPriceError ? priceErrorText : ''}
-                value={price}
+                error={itemFormErrors.price}
+                helperText={itemFormErrors.price && 'Plase enter price'}
+                value={itemForm.price}
                 required
-                onChange={handlePriceChange}
+                onChange={handleInputChange('price')}
                 sx={{ flex: 1, marginLeft: "10px" }}
               />
             </Box>
