@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import CheckroomIcon from "@mui/icons-material/Checkroom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import GroupIcon from "@mui/icons-material/Group";
 import MenuIcon from "@mui/icons-material/Menu";
 
 import { logo, minLogo } from "../assets";
@@ -86,6 +87,12 @@ const Sidebar = () => {
               <CheckroomIcon/>
             </ListItemIcon>
             <ListItemText primary="Items" />
+          </ListItemButton>
+          <ListItemButton component={Link} to="/customers" selected={location.pathname === "/customers"}>
+            <ListItemIcon>
+              <GroupIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Customers" />
           </ListItemButton>
         </List>
 
