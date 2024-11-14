@@ -3,7 +3,6 @@ import {
   Autocomplete, 
   Box, 
   Button, 
-  CircularProgress, 
   Container, 
   Dialog, 
   DialogActions, 
@@ -25,7 +24,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useAlert } from "../contexts/AlertContext";
 import { useAuth } from "../contexts/Auth";
-import { AddButton, Iconify, TableHeader } from "../components";
+import { AddButton, Iconify, Loading, TableHeader } from "../components";
 import FormattingUtils from "../utils/FormattingUtils";
 import ServerCommunicationUtils from "../utils/ServerCommunicationUtils";
 import ValidationUtils from "../utils/ValidationUtils";
@@ -711,7 +710,7 @@ const ItemsScreen = () => {
             Add Item Type
           </Button>
             {loading ? (
-              <CircularProgress color="success" size={20} />
+              <Loading />
             ) : (
               !openAddItemType &&
                 <DialogActions>
@@ -733,7 +732,7 @@ const ItemsScreen = () => {
               />
               <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2, marginBottom: 5 }}>
                 {loading ? (
-                  <CircularProgress color="inherit" size={20} />
+                  <Loading/>
                 ) : (
                   <>
                     <Button onClick={handleCloseAddItemType} sx={{ bgcolor: '#F13C15', color: "black" }}>Cancel</Button>
@@ -844,7 +843,7 @@ const ItemsScreen = () => {
           </DialogContent>
           <Box display="flex" justifyContent="center" marginTop="5px" marginBottom="10px">
             {loading ? (
-              <CircularProgress color="inherit" size={20} />
+              <Loading/>
             ) : (
               <>
                 <Button onClick={handleCloseEditItem} sx={{ bgcolor: '#F13C15', color: "black" }}>Cancel</Button>
