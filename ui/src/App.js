@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Navigate, Route, Routes, useLocation } from "r
 
 import './global.css';
 import { AuthProvider, useAuth } from "./contexts/Auth";
+import { AlertProvider } from "./contexts/AlertContext";
 import { CustomersScreen, DashboardScreen, ItemsScreen, LoginScreen } from "./screens";
 import { Sidebar } from "./components";
 
@@ -37,15 +38,17 @@ const ItemsPage = sidebarPage(ItemsScreen);
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/login" element={<LoginScreen/>} />
-          <Route path="/dashboard" element={<PrivateRoute element={<DashboardPage/>} />} />
-          <Route path="/*" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/items" element={<PrivateRoute element={<ItemsPage />} />} />
-          <Route path="/customers" element={<PrivateRoute element={<CustomersPage />} />} />
-        </Routes>
-      </Router>
+      <AlertProvider>
+        <Router>
+          <Routes>
+            <Route path="/login" element={<LoginScreen/>} />
+            <Route path="/dashboard" element={<PrivateRoute element={<DashboardPage/>} />} />
+            <Route path="/*" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/items" element={<PrivateRoute element={<ItemsPage />} />} />
+            <Route path="/customers" element={<PrivateRoute element={<CustomersPage />} />} />
+          </Routes>
+        </Router>
+      </AlertProvider>
     </AuthProvider>
   );
 }

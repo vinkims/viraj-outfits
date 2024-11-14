@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { 
-  Alert, 
   Autocomplete, 
   Box, 
   Button, 
@@ -12,7 +11,6 @@ import {
   DialogTitle, 
   Grid, 
   Paper, 
-  Snackbar, 
   Stack, 
   Table, 
   TableBody, 
@@ -25,6 +23,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
+import { useAlert } from "../contexts/AlertContext";
 import { useAuth } from "../contexts/Auth";
 import { AddButton, Iconify, TableHeader } from "../components";
 import FormattingUtils from "../utils/FormattingUtils";
@@ -32,9 +31,9 @@ import ServerCommunicationUtils from "../utils/ServerCommunicationUtils";
 import ValidationUtils from "../utils/ValidationUtils";
 
 const ItemsScreen = () => {
+  const { showAlert } = useAlert();
   const { logout } = useAuth();
   const navigate = useNavigate();
-  const [ alertMessage, setAlertMessage ] = useState('');
   const [ categories, setCategories ] = useState('');
   const [ isItemTypeNameError, setIsItemTypeNameError ] = useState(false);
   const initialItemForm = {
@@ -67,11 +66,9 @@ const ItemsScreen = () => {
   const [ newItemFormErrors, setNewItemFormErrors ] = useState(initialItemFormErrors);
   const [ openAddItem, setOpenAddItem ] = useState(false);
   const [ openAddItemType, setOpenAddItemType ] = useState(false);
-  const [ openAlert, setOpenAlert ] = useState(false);
   const [ openEditItem, setOpenEditItem ] = useState(false);
   const [ pageNumber, setPageNumber ] = useState(0);
   const [ pageSize, setPageSize ] = useState(10);
-  const [ severity, setSeverity ] = useState('success');
   const [ totalResults, setTotalResults ] = useState(0);
 
   const headerLabels = [
@@ -99,12 +96,7 @@ const ItemsScreen = () => {
   useEffect(() => {
     getCategories();
   }, []);
-
-  const clearAddItemTypeDetails = () => {
-    setItemTypeName('');
-    setIsItemTypeNameError(false);
-  }
-
+  
   const clearFormDetails = () => {
     setItemForm(initialItemForm);
     setItemFormErrors(initialItemFormErrors);
@@ -123,21 +115,16 @@ const ItemsScreen = () => {
         setCategories(formattedCategories);
       } else {
         setLoading(false);
-        setOpenAlert(true);
-        setSeverity('error');
-        setAlertMessage('Error fetching categories');
+        showAlert('Error fetching categories', 'error');
       }
     })
     .catch(error => {
       console.error("Error: ", error);
       setLoading(false);
-      setOpenAlert(true);
-      setSeverity('error');
-      if (error.toString().includes('NetworkError when attempting to fetch resource')) {
-        setAlertMessage('Please check your internet connection');
-      } else {
-        setAlertMessage('Error fetching categories');
-      }
+      let alertMsg = error.toString().includes('NetworkError when attempting to fetch resource')
+        ? 'Please check your internet connection.'
+        : 'Error fetching categories.';
+      showAlert(alertMsg, 'error');
     })
   }
 
@@ -151,26 +138,22 @@ const ItemsScreen = () => {
       if (res.status === 200) {
         setLoading(false);
         setItems(res.content.data);
-        setPageNumber(res.content.pageInfo.pageNumber);
-        setPageSize(res.content.pageInfo.pageSize);
-        setTotalResults(res.content.pageInfo.totalResults);
+        let pageInfo = res.content.pageInfo;
+        setPageNumber(pageInfo.pageNumber);
+        setPageSize(pageInfo.pageSize);
+        setTotalResults(pageInfo.totalResults);
       } else {
         setLoading(false);
-        setOpenAlert(true);
-        setSeverity('error');
-        setAlertMessage('Error fetching items');
+        showAlert('Error fetching items', 'error');
       }
     })
     .catch(error => {
       console.error("Error: ", error);
       setLoading(false);
-      setOpenAlert(true);
-      setSeverity('error');
-      if (error.toString().includes('NetworkError when attempting to fetch resource')) {
-        setAlertMessage('Please check your internet connection');
-      } else {
-        setAlertMessage('Error fetching items');
-      }
+      let alertMsg = error.toString().includes('NetworkError when attempting to fetch resource')
+        ? 'Please check your internet connection.'
+        : 'Error fetching items.';
+      showAlert(alertMsg, 'error');
     })
   }
 
@@ -185,21 +168,16 @@ const ItemsScreen = () => {
         setItemTypes(formattedItemTypes);
       } else {
         setLoading(false);
-        setOpenAlert(true);
-        setSeverity('error');
-        setAlertMessage('Error fetching product items');
+        showAlert('Error fetching item types', 'error');
       }
     })
     .catch(error => {
       console.error("Error: ", error);
       setLoading(false);
-      setOpenAlert(true);
-      setSeverity('error');
-      if (error.toString().includes('NetworkError when attempting to fetch resource')) {
-        setAlertMessage('Please check your internet connection');
-      } else {
-        setAlertMessage('Error fetching item types');
-      }
+      let alertMsg = error.toString().includes('NetworkError when attempting to fetch resource')
+        ? 'Please check your internet connection.'
+        : 'Error fetching item types.';
+      showAlert(alertMsg, 'error');
     })
   }
 
@@ -256,15 +234,10 @@ const ItemsScreen = () => {
     setIsItemTypeNameError(false);
   }
 
-  const handleCloseAlert = () => {
-    setOpenAlert(false);
-  }
-
   const handleCloseEditItem = (event, reason) => {
     if (reason === 'backdropClick') {
       return;
     }
-
     setOpenEditItem(false);
     clearFormDetails();
   }
@@ -379,11 +352,8 @@ const ItemsScreen = () => {
     .then(res => {
       if (res.status === 201) {
         setLoading(false);
-        setOpenAlert(true);
-        setSeverity('success');
-        setAlertMessage('Item added successfully');
-        setOpenAddItem(false);
-        clearFormDetails();
+        showAlert('Item added successfully', 'success');
+        handleCloseAddItem();
         getItems();
       } else if (res.status === 403){
         logoutUser();
@@ -392,21 +362,16 @@ const ItemsScreen = () => {
           ? 'Item could not be added. Try again later.'
           : res.detail;
         setLoading(false);
-        setOpenAlert(true);
-        setSeverity('error');
-        setAlertMessage(alertMsg);
+        showAlert(alertMsg, 'error');
       }
     })
     .catch(error => {
       console.error("Error: ", error);
       setLoading(false);
-      setOpenAlert(true);
-      setSeverity('error');
-      if (error.toString().includes('NetworkError when attempting to fetch resource')) {
-        setAlertMessage('Please check your internet connection');
-      } else {
-        setAlertMessage('Error adding item');
-      }
+      let alertMsg = error.toString().includes('NetworkError when attempting to fetch resource')
+        ? 'Please check your internet connection.'
+        : 'Error adding item.';
+      showAlert(alertMsg, 'error');
     })
   }
 
@@ -436,11 +401,8 @@ const ItemsScreen = () => {
     .then(res => {
       if (res.status === 201) {
         setLoading(false);
-        setOpenAlert(true);
-        setSeverity('success');
-        setAlertMessage('Item type created successfully');
-        setOpenAddItemType(false);
-        clearAddItemTypeDetails();
+        showAlert('Item type created successfully', 'success');
+        handleCloseAddItemType();
         getItemTypes();
       } else if (res.status === 403) {
         logoutUser();
@@ -449,21 +411,16 @@ const ItemsScreen = () => {
           ? 'Item type could not be added. Please try again.'
           : res.detail;
         setLoading(false);
-        setOpenAlert(true);
-        setSeverity('error');
-        setAlertMessage(alertMsg);
+        showAlert(alertMsg, 'error');
       }
     })
     .catch(error => {
       console.error("Error: ", error);
       setLoading(false);
-      setOpenAlert(true);
-      setSeverity('error');
-      if (error.toString().includes('NetworkError when attempting to fetch resource')) {
-        setAlertMessage('Please check your internet connection');
-      } else {
-        setAlertMessage('Error adding item type');
-      }
+      let alertMsg = error.toString().includes('NetworkError when attempting to fetch resource')
+        ? 'Please check your internet connection.'
+        : 'Error adding item type.';
+      showAlert(alertMsg, 'error');
     })
   }
 
@@ -475,9 +432,7 @@ const ItemsScreen = () => {
     const updatedFields = getUpdatedFields();
 
     if (Object.keys(updatedFields).length === 0) {
-      setOpenAlert(true);
-      setSeverity('info');
-      setAlertMessage("No changes detected");
+      showAlert('No changes detected', 'info');
       return;
     }
 
@@ -487,11 +442,8 @@ const ItemsScreen = () => {
     .then(res => {
       if (res.status === 200) {
         setLoading(false);
-        setOpenAlert(true);
-        setSeverity('success');
-        setAlertMessage('Item updated successfully');
-        setOpenEditItem(false);
-        clearFormDetails();
+        showAlert('Item updated successfully', 'success');
+        handleCloseEditItem();
         getItems();
       } else if (res.status === 403) {
         logoutUser();
@@ -500,21 +452,16 @@ const ItemsScreen = () => {
           ? 'Item could not be updated. Try again later.'
           : res.detail;
         setLoading(false);
-        setOpenAlert(true);
-        setSeverity('error');
-        setAlertMessage(alertMsg);
+        showAlert(alertMsg, 'error');
       }
     })
     .catch(error => {
       console.error("Error: ", error);
       setLoading(false);
-      setOpenAlert(true);
-      setSeverity('error');
-      if (error.toString().includes('NetworkError when attempting to fetch resource')) {
-        setAlertMessage('Please check your internet connection');
-      } else {
-        setAlertMessage('Error updating item');
-      }
+      let alertMsg = error.toString().includes('NetworkError when attempting to fetch resource')
+        ? 'Please check your internet connection.'
+        : 'Error updating item.';
+      showAlert(alertMsg, 'error');
     })
   }
 
@@ -581,21 +528,6 @@ const ItemsScreen = () => {
     setNewItemFormErrors(errors);
 
     return Object.keys(errors).length === 0;
-  }
-
-  const showAlert = () => {
-    return (
-      <Snackbar
-        open={openAlert}
-        autoHideDuration={7000}
-        onClose={handleCloseAlert}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert onClose={handleCloseAlert} variant="filled" severity={severity}>
-          {alertMessage}
-        </Alert>
-      </Snackbar>
-    );
   }
 
   return (
@@ -923,7 +855,6 @@ const ItemsScreen = () => {
         </Dialog>
 
       </Grid>
-      {showAlert()}
     </Container>
   );
 }
