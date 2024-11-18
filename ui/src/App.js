@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Navigate, Route, Routes, useLocation } from "r
 import './global.css';
 import { AuthProvider, useAuth } from "./contexts/Auth";
 import { AlertProvider } from "./contexts/AlertContext";
-import { CustomersScreen, DashboardScreen, ItemsScreen, LoginScreen } from "./screens";
+import { CustomersScreen, DashboardScreen, ItemsScreen, LoginScreen, TransactionsScreen } from "./screens";
 import { Sidebar } from "./components";
 
 const PrivateRoute = ({ element, ...rest }) => {
@@ -34,6 +34,7 @@ const sidebarPage = (Component) => {
 const CustomersPage = sidebarPage(CustomersScreen);
 const DashboardPage = sidebarPage(DashboardScreen);
 const ItemsPage = sidebarPage(ItemsScreen);
+const TransactionsPage = sidebarPage(TransactionsScreen);
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
             <Route path="/*" element={<Navigate to="/dashboard" replace />} />
             <Route path="/items" element={<PrivateRoute element={<ItemsPage />} />} />
             <Route path="/customers" element={<PrivateRoute element={<CustomersPage />} />} />
+            <Route path="/transactions" element={<PrivateRoute element={<TransactionsPage/> } />} />
           </Routes>
         </Router>
       </AlertProvider>

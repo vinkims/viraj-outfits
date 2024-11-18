@@ -15,6 +15,7 @@ import CheckroomIcon from "@mui/icons-material/Checkroom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import GroupIcon from "@mui/icons-material/Group";
 import MenuIcon from "@mui/icons-material/Menu";
+import ReceiptIcon from '@mui/icons-material/Receipt';
 
 import { logo, minLogo } from "../assets";
 import { useAuth } from "../contexts/Auth";
@@ -24,6 +25,13 @@ const Sidebar = () => {
   const { logout } = useAuth();
   const [ open, setOpen ] = useState(false);
 
+  const MENU_ITEMS = [
+    { label: "Dashboard", path: "/dashboard", icon:<DashboardIcon/> },
+    { label: "Items", path: "/items", icon: <CheckroomIcon/> },
+    { label: "Customers", path: "/customers", icon: <GroupIcon/> },
+    { label: "Transactions", path: "/transactions", icon: <ReceiptIcon/> }
+  ]
+
   const handleLogout = () => {
     logout();
   }
@@ -31,6 +39,18 @@ const Sidebar = () => {
   const handleToggleMenu = () => {
     setOpen(!open);
   }
+
+  const renderMenuItem = ({ label, path, icon }) => (
+    <ListItemButton
+      key={path}
+      component={Link}
+      to={path}
+      selected={location.pathname === path}
+    >
+      <ListItemIcon>{icon}</ListItemIcon>
+      <ListItemText primary={label} />
+    </ListItemButton>
+  );
 
   return (
     <>
@@ -76,24 +96,7 @@ const Sidebar = () => {
         </Link> 
 
         <List>
-          <ListItemButton component={Link} to="/dashboard" selected={location.pathname === '/dashboard'}>
-            <ListItemIcon>
-              <DashboardIcon/>
-            </ListItemIcon>
-            <ListItemText primary="Dashboard" />
-          </ListItemButton>
-          <ListItemButton component={Link} to="/items" selected={location.pathname === "/items"}>
-            <ListItemIcon>
-              <CheckroomIcon/>
-            </ListItemIcon>
-            <ListItemText primary="Items" />
-          </ListItemButton>
-          <ListItemButton component={Link} to="/customers" selected={location.pathname === "/customers"}>
-            <ListItemIcon>
-              <GroupIcon/>
-            </ListItemIcon>
-            <ListItemText primary="Customers" />
-          </ListItemButton>
+          {MENU_ITEMS.map(renderMenuItem)}
         </List>
 
       </Drawer>
