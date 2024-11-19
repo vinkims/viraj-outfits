@@ -2,13 +2,6 @@ package ke.kigen.api.services.payment.transaction_type;
 
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-
 import ke.kigen.api.dtos.general.PageDTO;
 import ke.kigen.api.dtos.payment.TransactionTypeDTO;
 import ke.kigen.api.exceptions.NotFoundException;
@@ -17,6 +10,11 @@ import ke.kigen.api.repositories.payment.TransactionTypeDAO;
 import ke.kigen.api.specifications.SpecBuilder;
 import ke.kigen.api.specifications.SpecFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -62,7 +60,7 @@ public class STransactionType implements ITransactionType {
     public ETransactionType getById(Integer transactionTypeId, Boolean handleNotFound) {
 
         Optional<ETransactionType> transactionType = getById(transactionTypeId);
-        if (transactionType.isPresent() && handleNotFound) {
+        if (!transactionType.isPresent() && handleNotFound) {
             throw new NotFoundException("transaction type with specified id not found", "transactionTypeId");
         }
         return transactionType.get();
