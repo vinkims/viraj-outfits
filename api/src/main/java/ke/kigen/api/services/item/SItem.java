@@ -5,17 +5,11 @@ import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-
 import ke.kigen.api.configs.properties.MainConfig;
 import ke.kigen.api.dtos.general.PageDTO;
 import ke.kigen.api.dtos.item.ImageDTO;
 import ke.kigen.api.dtos.item.ItemDTO;
+import ke.kigen.api.events.ItemCreatedEvent;
 import ke.kigen.api.exceptions.NotFoundException;
 import ke.kigen.api.models.category.ECategory;
 import ke.kigen.api.models.item.EImage;
@@ -30,10 +24,23 @@ import ke.kigen.api.services.status.IStatus;
 import ke.kigen.api.specifications.SpecBuilder;
 import ke.kigen.api.specifications.SpecFactory;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class SItem implements IItem {
+
+    Logger logger = LoggerFactory.getLogger(SItem.class);
+
+    private final ApplicationEventPublisher eventPublisher;
 
     private final ICategory sCategory;
 
@@ -67,6 +74,7 @@ public class SItem implements IItem {
     }
 
     @Override
+    @Transactional
     public EItem create(ItemDTO itemDTO) {
         EItem item = new EItem();
         setCategory(item, itemDTO.getCategoryId());
@@ -84,6 +92,7 @@ public class SItem implements IItem {
         setStatus(item, statusId);
 
         save(item);
+        eventPublisher.publishEvent(new ItemCreatedEvent(this, item));
         return item;
     }
 

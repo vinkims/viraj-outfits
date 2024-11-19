@@ -3,25 +3,28 @@ package ke.kigen.api.services.payment.transaction;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.jpa.domain.Specification;
-
 import ke.kigen.api.dtos.general.PageDTO;
 import ke.kigen.api.dtos.payment.TransactionDTO;
 import ke.kigen.api.models.payment.ETransaction;
+import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 
 public interface ITransaction {
     
     final List<String> ALLOWED_FIELDS = List.of(
         "amount",
         "createdOn",
+        "paymentChannel.id",
+        "paymentChannel.name",
         "status.id",
         "status.name",
         "transactionCode",
+        "transactionSource.id",
+        "transactionSource.name",
         "transactionType.id",
         "transactionType.name",
-        "updatedOn"
+        "updatedOn",
+        "user.id"
     );
 
     Specification<ETransaction> buildFilterSpec(String searchQuery);

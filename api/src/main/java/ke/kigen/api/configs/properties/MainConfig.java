@@ -6,10 +6,11 @@ import org.springframework.stereotype.Component;
 import ke.kigen.api.configs.properties.admin.AdminConfig;
 import ke.kigen.api.configs.properties.contact.ContactConfig;
 import ke.kigen.api.configs.properties.logging.LoggingConfig;
+import ke.kigen.api.configs.properties.payment_channel.PaymentChannelConfig;
 import ke.kigen.api.configs.properties.role.RoleConfig;
 import ke.kigen.api.configs.properties.security.SecurityConfig;
 import ke.kigen.api.configs.properties.status.StatusConfig;
-import ke.kigen.api.configs.properties.transaction.TransactionTypeConfig;
+import ke.kigen.api.configs.properties.transaction.TransactionConfig;
 import ke.kigen.api.configs.properties.user.UserConfig;
 import lombok.Data;
 
@@ -24,13 +25,15 @@ public class MainConfig {
 
     private LoggingConfig logging;
 
+    private PaymentChannelConfig paymentChannel;
+
     private RoleConfig role;
 
     private SecurityConfig security;
     
     private StatusConfig status;
 
-    private TransactionTypeConfig transactionType;
+    private TransactionConfig transaction;
 
     private UserConfig user;
 
@@ -38,10 +41,11 @@ public class MainConfig {
         setAdmin(new AdminConfig());
         setContact(new ContactConfig());
         setLogging(new LoggingConfig());
+        setPaymentChannel(new PaymentChannelConfig());
         setRole(new RoleConfig());
         setSecurity(new SecurityConfig());
         setStatus(new StatusConfig());
-        setTransactionType(new TransactionTypeConfig());
+        setTransaction(new TransactionConfig());
         setUser(new UserConfig());
     }
 }
