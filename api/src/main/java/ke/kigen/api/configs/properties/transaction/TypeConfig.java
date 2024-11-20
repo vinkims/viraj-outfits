@@ -9,6 +9,8 @@ public class TypeConfig {
     
     private Integer cancellationId;
 
+    private Integer capitalInjectionId;
+
     private Integer cashbackId;
 
     private Integer deliveryFeeId;
@@ -20,6 +22,10 @@ public class TypeConfig {
     private Integer expenseId;
 
     private Integer incomeId;
+
+    private Integer loanInjectionId;
+
+    private Integer loanPaymentId;
 
     private Integer orderId;
 
@@ -43,12 +49,15 @@ public class TypeConfig {
 
     public TypeConfig() {
         setCancellationId(8);
+        setCapitalInjectionId(18);
         setCashbackId(16);
         setDeliveryFeeId(14);
         setDiscountId(9);
         setExchangeId(4);
         setExpenseId(11);
         setIncomeId(10);
+        setLoanInjectionId(19);
+        setLoanPaymentId(20);
         setOrderId(6);
         setPaymentId(7);
         setPurchaseId(1);
