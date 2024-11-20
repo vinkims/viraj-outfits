@@ -26,7 +26,7 @@ import ke.kigen.api.services.payment.transaction_source.ITransactionSource;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping(path = "/payment/source")
+@RequestMapping(path = "/transaction/source")
 @RequiredArgsConstructor
 public class CTransactionSource {
     
