@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
-  Alert,
   Box, 
   Button, 
   Card, 
@@ -9,62 +8,55 @@ import {
   Container, 
   Divider, 
   IconButton, 
-  InputAdornment, 
-  Snackbar, 
+  InputAdornment,  
   Stack, 
-  TextField, 
-  Typography 
+  TextField 
 } from "@mui/material";
 import VisibilityOn from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
-import ServerCommunicationUtils from "../utils/ServerCommunicationUtils";
+import { useAlert } from "../contexts/AlertContext";
 import { useAuth } from "../contexts/Auth";
-import ValidationUtils from "../utils/ValidationUtils";
+import { darkLogo } from "../assets";
+import ServerCommunicationUtils from "../utils/ServerCommunicationUtils";
 
 const LoginScreen = () => {
   const { login } = useAuth();
+  const { showAlert } = useAlert();
   const navigate = useNavigate();
-  const [ alertMessage, setAlertMessage ] = useState('');
-  const [ isPasswordError, setIsPasswordError ] = useState(false);
-  const [ isUsernameError, setIsUsernameError ] = useState(false);
+  const initialLoginForm = {
+    username: '',
+    password: ''
+  };
+  const initialLoginFormErrors = {
+    username: false,
+    password: false
+  };
   const [ loading, setLoading ] = useState(false);
-  const [ openAlert, setOpenAlert ] = useState(false);
-  const [ password, setPassword ] = useState('');
-  const [ passwordErrorText, setPasswordErrorText ] = useState('');
-  const [ severity, setSeverity ] = useState('success');
+  const [ loginForm, setLoginForm ] = useState(initialLoginForm);
+  const [ loginFormErrors, setLoginFormErrors ] = useState(initialLoginFormErrors);
   const [ showPassword, setShowPassword ] = useState(false);
-  const [ username, setUsername ] = useState('');
-  const [ usernameErrorText, setUsernameErrorText ] = useState('');
 
-  const handleCloseAlert = () => {
-    setOpenAlert(false);
+  const handleInputChange = (field) => (event) =>{
+    const value = event.target.value;
+    setLoginForm((prevForm) => ({
+      ...prevForm,
+      [field]: value
+    }));
+    setLoginFormErrors((prevErrors) => ({
+      ...prevErrors,
+      [field]: false
+    }));
   }
 
   const handleLogin = async () => {
-    const conditions = [
-      {
-        value: username,
-        setError: setIsUsernameError,
-        setErrorText: setUsernameErrorText,
-        errorMessage: "Please enter username"
-      },
-      {
-        value: password,
-        setError: setIsPasswordError,
-        setErrorText: setPasswordErrorText,
-        errorMessage: "Please enter password"
-      }
-    ];
-
-    const errorMessages = ValidationUtils.validateInputs(conditions);
-    if (errorMessages.length > 0) {
+    if (!validateForm()) {
       return;
     }
 
     const payload = {
-      username: username,
-      password: password
+      username: loginForm.username,
+      password: loginForm.password
     }
 
     setLoading(true);
@@ -73,80 +65,62 @@ const LoginScreen = () => {
     .then(data => {
       if (data.status === 200) {
         setLoading(false);
-        setOpenAlert(true);
-        setSeverity('success');
-        setAlertMessage('Login successful');
+        showAlert('Login successful', 'success');
         login(data.content.token);
         navigate("/dashboard");
       } else if (data.status === 400) {
         setLoading(false);
-        setOpenAlert(true);
-        setSeverity('error');
-        setAlertMessage('Invalid credentials provided');
+        showAlert('Invalid credentials provided', 'error');
       }
     })
     .catch(error => {
       console.error("Error:", error);
       setLoading(false);
-      setOpenAlert(true);
-      setSeverity('error');
-      if (error.toString().includes('NetworkError when attempting to fetch resource')) {
-        setAlertMessage('Please check your internet connection');
-      } else {
-        setAlertMessage('Error logging in');
-      }
+      let alertMsg = error.toString().includes('NetworkError when attempting to fetch resource')
+        ? 'Please check your internet connection'
+        : 'Error logging in';
+      showAlert(alertMsg, 'error');
     })
-  }
-
-  const handlePasswordChange = (event) => {
-    const passwordValue = event.target.value;
-    setPassword(passwordValue);
-    setIsPasswordError(false);
-  }
-
-  const handleUsernameChange = (event) => {
-    const usernameValue = event.target.value;
-    setUsername(usernameValue);
-    setIsUsernameError(false);
   }
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   }
 
-  const showAlert = () => {
-    return (
-      <Snackbar 
-        open={openAlert} 
-        autoHideDuration={7000} 
-        onClose={handleCloseAlert} 
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert onClose={handleCloseAlert} variant="filled" severity={severity}>
-          {alertMessage}
-        </Alert>
-      </Snackbar>
-    );
+  const validateForm = () => {
+    const errors = {};
+
+    if (!loginForm.username) {
+      errors.username = true;
+    }
+    if (!loginForm.password) {
+      errors.password = true;
+    }
+
+    setLoginFormErrors(errors);
+    return Object.keys(errors).length === 0;
   }
 
   return (
     <Container component="main" maxWidth="xs">
       <Box display="flex" alignItems="center" justifyContent="center" height="100vh">
         <Card sx={{ p:5, width: "100%" }}>
-          <Typography variant="h5" sx={{ textAlign: "center", mt: 2}}>Viraj Outfits</Typography>
+          <Box>
+            <img src={darkLogo} alt="logo" style={{ height: "auto", width: "100%" }} />
+          </Box>
           <Divider sx={{ my: 4 }} />
           <Stack spacing={3}>
             <TextField
               name="username"
               label="Username"
-              error={isUsernameError}
-              helperText={isUsernameError ? usernameErrorText : ''}
+              error={loginFormErrors.username}
+              helperText={loginFormErrors.username && 'Please enter username'}
               variant="outlined"
               margin="normal"
               required
               id="username"
-              value={username}
-              onChange={handleUsernameChange}
+              value={loginForm.username}
+              onChange={handleInputChange('username')}
               InputProps={{
                 sx: { borderRadius: 5, fontSize: '12px' }
               }}
@@ -157,15 +131,15 @@ const LoginScreen = () => {
             <TextField
               name="password"
               label="Password"
-              error={isPasswordError}
-              helperText={isPasswordError ? passwordErrorText : ''}
+              error={loginFormErrors.password}
+              helperText={loginFormErrors.password && 'Please enter password'}
               variant="outlined"
               margin="normal"
               required
               type={showPassword ? 'text' : 'password'}
               id="password"
-              value={password}
-              onChange={handlePasswordChange}
+              value={loginForm.password}
+              onChange={handleInputChange('password')}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -206,7 +180,6 @@ const LoginScreen = () => {
           </Stack>
         </Card>
       </Box>
-      {showAlert()}
     </Container>
   );
 }
