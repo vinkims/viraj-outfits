@@ -305,7 +305,7 @@ const CustomersScreen = () => {
   }
 
   return (
-    <Container sx={{ maxWidth: '100vw !important', justifyContent: 'center' }}>
+    <Container sx={{ maxWidth: '100vw !important', justifyContent: 'center', paddingTop: "50px" }}>
       <Grid container spacing={2} sx={{ marginTop: '10px' }}>
         <Stack direction="row" justifyContent="space-between" width="100%">
           <Typography variant="h5" sx={{ mb: 2 }}>Customers</Typography>

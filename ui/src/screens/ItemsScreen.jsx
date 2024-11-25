@@ -24,7 +24,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useAlert } from "../contexts/AlertContext";
 import { useAuth } from "../contexts/Auth";
-import { AddButton, Iconify, Loading, TableHeader } from "../components";
+import { AddButton, DialogButtons, Iconify, Loading, TableHeader } from "../components";
 import FormattingUtils from "../utils/FormattingUtils";
 import ServerCommunicationUtils from "../utils/ServerCommunicationUtils";
 import ValidationUtils from "../utils/ValidationUtils";
@@ -530,7 +530,7 @@ const ItemsScreen = () => {
   }
 
   return (
-    <Container sx={{ maxWidth: '100vw !important', justifyContent: 'center' }}>
+    <Container sx={{ maxWidth: '100vw !important', justifyContent: 'center', paddingTop: "50px" }}>
       <Grid container spacing={2} sx={{ marginTop: '10px' }}>
         <Stack direction="row" justifyContent="space-between" width="100%">
           <Typography variant="h5" sx={{ mb: 2 }}>
@@ -841,16 +841,13 @@ const ItemsScreen = () => {
               />
             </Box>
           </DialogContent>
-          <Box display="flex" justifyContent="center" marginTop="5px" marginBottom="10px">
-            {loading ? (
-              <Loading/>
-            ) : (
-              <>
-                <Button onClick={handleCloseEditItem} sx={{ bgcolor: '#F13C15', color: "black" }}>Cancel</Button>
-                <Button onClick={handleUpdateItem} sx={{ bgcolor: '#79AA45', color: "black", marginLeft: "20px" }}>Save</Button>
-              </>
-            )}
-          </Box>
+          <DialogButtons
+            loading={loading}
+            cancelTitle="Cancel"
+            handleCancel={handleCloseEditItem}
+            submitTitle="Save"
+            handleSubmit={handleUpdateItem}
+          />
         </Dialog>
 
       </Grid>
