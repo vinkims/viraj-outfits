@@ -4,8 +4,8 @@ import { BrowserRouter as Router, Navigate, Route, Routes, useLocation } from "r
 import './global.css';
 import { AuthProvider, useAuth } from "./contexts/Auth";
 import { AlertProvider } from "./contexts/AlertContext";
-import { CustomersScreen, DashboardScreen, ItemsScreen, LoginScreen, TransactionsScreen } from "./screens";
-import { Sidebar } from "./components";
+import { CustomersScreen, DashboardScreen, ItemsScreen, LoginScreen, TransactionsScreen, UsersScreen } from "./screens";
+import { AppBarDrawer } from "./components";
 
 const PrivateRoute = ({ element, ...rest }) => {
   const { isAuthenticated } = useAuth();
@@ -24,7 +24,7 @@ const sidebarPage = (Component) => {
 
     return (
       <div style={{ display: "flex" }}>
-        { !isLoginRoute && <Sidebar /> }
+        { !isLoginRoute && <AppBarDrawer /> }
         <Component/>
       </div>
     );
@@ -35,6 +35,7 @@ const CustomersPage = sidebarPage(CustomersScreen);
 const DashboardPage = sidebarPage(DashboardScreen);
 const ItemsPage = sidebarPage(ItemsScreen);
 const TransactionsPage = sidebarPage(TransactionsScreen);
+const UsersPage = sidebarPage(UsersScreen);
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
             <Route path="/items" element={<PrivateRoute element={<ItemsPage />} />} />
             <Route path="/customers" element={<PrivateRoute element={<CustomersPage />} />} />
             <Route path="/transactions" element={<PrivateRoute element={<TransactionsPage/> } />} />
+            <Route path="/users" element={<PrivateRoute element={<UsersPage/>} />} />
           </Routes>
         </Router>
       </AlertProvider>
