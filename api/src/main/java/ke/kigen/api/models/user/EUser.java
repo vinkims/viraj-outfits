@@ -1,11 +1,5 @@
 package ke.kigen.api.models.user;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,11 +9,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
 import ke.kigen.api.models.contacts.EContact;
 import ke.kigen.api.models.role.ERole;
 import ke.kigen.api.models.status.EStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity(name = "users")
 @Data
@@ -53,6 +51,9 @@ public class EUser implements Serializable {
 
     @Column(name = "password")
     private String password;
+
+    @Column(name = "password_reset")
+    private Boolean passwordReset;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", referencedColumnName = "id")

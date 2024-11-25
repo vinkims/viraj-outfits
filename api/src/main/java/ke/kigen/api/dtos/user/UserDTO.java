@@ -34,6 +34,8 @@ public class UserDTO {
 
     private String password;
 
+    private Boolean passwordReset;
+
     private LocalDateTime createdOn;
 
     private LocalDateTime updatedOn;
@@ -57,6 +59,7 @@ public class UserDTO {
         setLastActiveOn(user.getLastActiveOn());
         setLastName(user.getLastName());
         setMiddleName(user.getMiddleName());
+        setPasswordReset(user.getPasswordReset());
         if (user.getRole() != null) {
             setRole(new RoleDTO(user.getRole()));
         }
