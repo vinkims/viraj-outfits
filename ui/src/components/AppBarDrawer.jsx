@@ -9,20 +9,22 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Menu,
+  MenuItem,
   Toolbar,
   Typography
 } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import CheckroomIcon from "@mui/icons-material/Checkroom";
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import GroupIcon from "@mui/icons-material/Group";
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import MenuIcon from "@mui/icons-material/Menu";
 import ReceiptIcon from '@mui/icons-material/Receipt';
 
-import { darkLogo } from "../assets";
 import { useAuth } from "../contexts/Auth";
 
 const drawerWidth = 240;
@@ -120,6 +122,7 @@ const AppBarDrawer = () => {
   const location = useLocation();
   const theme = useTheme();
   const { logout } = useAuth();
+  const [ anchorEl, setAnchorEl ] = useState(null);
   const [ open, setOpen ] = useState(false);
 
   const MENU_ITEMS = [
@@ -127,7 +130,7 @@ const AppBarDrawer = () => {
     { label: "Items", path: "/items", icon: <CheckroomIcon/> },
     { label: "Customers", path: "/customers", icon: <GroupIcon/> },
     { label: "Transactions", path: "/transactions", icon: <ReceiptIcon/> },
-    { label: "Users", path: "/users", icon: <ManageAccountsIcon/> }
+    { label: "Users", path: "/users", icon: <AssignmentIndIcon/> }
   ];
 
   const handleDrawerClose = () => {
@@ -136,6 +139,18 @@ const AppBarDrawer = () => {
 
   const handleDrawerOpen = () => {
     setOpen(true);
+  }
+
+  const handleLogout = () => {
+    logout();
+  }
+
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  }
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
   }
 
   const renderMenuItem = ({ label, path, icon }) => (
@@ -200,6 +215,36 @@ const AppBarDrawer = () => {
               V-Raj Outfits
             </Typography>
           </Link>
+          <Box sx={{ flexGrow: 1 }}/>
+          <div style={{ alignSelf: "flex-end" }}>
+            <IconButton
+              size="large"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              color="inherit"
+              onClick={handleMenu}
+            >
+              <AccountCircleIcon/>
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right'
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right'
+              }}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+            >
+              <MenuItem>Profile</MenuItem>
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </Menu>
+          </div>
         </Toolbar>
       </StyledAppBar>
       <SideBar variant="permanent" open={open}>
