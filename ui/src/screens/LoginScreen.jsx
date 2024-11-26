@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { 
   Box, 
@@ -17,12 +18,14 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 import { useAlert } from "../contexts/AlertContext";
 import { useAuth } from "../contexts/Auth";
+import { useUser } from "../contexts/UserContext";
 import { darkLogo } from "../assets";
 import ServerCommunicationUtils from "../utils/ServerCommunicationUtils";
 
 const LoginScreen = () => {
   const { login } = useAuth();
   const { showAlert } = useAlert();
+  const { updateUser } = useUser();
   const navigate = useNavigate();
   const initialLoginForm = {
     username: '',
@@ -36,6 +39,29 @@ const LoginScreen = () => {
   const [ loginForm, setLoginForm ] = useState(initialLoginForm);
   const [ loginFormErrors, setLoginFormErrors ] = useState(initialLoginFormErrors);
   const [ showPassword, setShowPassword ] = useState(false);
+
+  const getUser = async (token) => {
+    const decodedToken = jwtDecode(token);
+    let userId = decodedToken.userId;
+
+    await ServerCommunicationUtils.get(`user/${userId}`)
+    .then(resp => {
+      if (resp.status === 200) {
+        const userDetails = {
+          firstName: resp.content.firstName,
+          lastName: resp.content.lastName,
+          userId: resp.content.id,
+          role: resp.content.role,
+          email: resp.content.contacts,
+          status: resp.content.status
+        };
+        updateUser(userDetails);
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+    })
+  }
 
   const handleInputChange = (field) => (event) =>{
     const value = event.target.value;
@@ -67,6 +93,7 @@ const LoginScreen = () => {
         setLoading(false);
         showAlert('Login successful', 'success');
         login(data.content.token);
+        getUser(data.content.token);
         navigate("/dashboard");
       } else if (data.status === 400) {
         setLoading(false);
