@@ -25,6 +25,7 @@ import GroupIcon from "@mui/icons-material/Group";
 import MenuIcon from "@mui/icons-material/Menu";
 import PaymentIcon from '@mui/icons-material/Payment';
 import ReceiptIcon from '@mui/icons-material/Receipt';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 import { useAuth } from "../contexts/Auth";
 
@@ -132,7 +133,8 @@ const AppBarDrawer = () => {
     { label: "Customers", path: "/customers", icon: <GroupIcon/> },
     { label: "Transactions", path: "/transactions", icon: <ReceiptIcon/> },
     { label: "Users", path: "/users", icon: <AssignmentIndIcon/> },
-    { label: "Expenses", path: "/expenses", icon: <PaymentIcon/> }
+    { label: "Expenses", path: "/expenses", icon: <PaymentIcon/> },
+    { label: "Settings", path: "/settings", icon: <SettingsIcon/> }
   ];
 
   const handleDrawerClose = () => {

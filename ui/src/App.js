@@ -4,7 +4,16 @@ import { BrowserRouter as Router, Navigate, Route, Routes, useLocation } from "r
 import './global.css';
 import { AuthProvider, useAuth } from "./contexts/Auth";
 import { AlertProvider } from "./contexts/AlertContext";
-import { CustomersScreen, DashboardScreen, ExpensesScreen, ItemsScreen, LoginScreen, TransactionsScreen, UsersScreen } from "./screens";
+import { 
+  CustomersScreen, 
+  DashboardScreen, 
+  ExpensesScreen, 
+  ItemsScreen, 
+  LoginScreen, 
+  SettingsScreen, 
+  TransactionsScreen, 
+  UsersScreen 
+} from "./screens";
 import { AppBarDrawer } from "./components";
 
 const PrivateRoute = ({ element, ...rest }) => {
@@ -35,6 +44,7 @@ const CustomersPage = sidebarPage(CustomersScreen);
 const DashboardPage = sidebarPage(DashboardScreen);
 const ExpensesPage = sidebarPage(ExpensesScreen);
 const ItemsPage = sidebarPage(ItemsScreen);
+const SettingsPage = sidebarPage(SettingsScreen);
 const TransactionsPage = sidebarPage(TransactionsScreen);
 const UsersPage = sidebarPage(UsersScreen);
 
@@ -52,6 +62,7 @@ function App() {
             <Route path="/transactions" element={<PrivateRoute element={<TransactionsPage/> } />} />
             <Route path="/users" element={<PrivateRoute element={<UsersPage/>} />} />
             <Route path="/expenses" element={<PrivateRoute element={<ExpensesPage/>} />} />
+            <Route path="/settings" element={<PrivateRoute element={<SettingsPage/>} />} />
           </Routes>
         </Router>
       </AlertProvider>
