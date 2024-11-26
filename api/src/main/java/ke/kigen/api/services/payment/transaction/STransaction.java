@@ -215,23 +215,21 @@ public class STransaction implements ITransaction {
 
     @EventListener
     public void handleExpenseCreated(ExpenseCreatedEvent event) {
-        EExpense expense = event.getExpense();
-        ETransaction transaction = new ETransaction();
-        transaction.setAmount(expense.getAmount());
-        transaction.setCreatedOn(LocalDateTime.now());
-        transaction.setDescription(expense.getDescription());
-        String reference = String.format("Expense id: %s", expense.getId());
-        transaction.setReference(reference);
-        String transactionCode = String.format("%s", System.currentTimeMillis());
-        transaction.setTransactionCode(transactionCode);
-        Integer transactionTypeId = mainConfig.getTransaction().getType().getExpenseId();
-        setTransactionType(transaction, transactionTypeId);
-
-        save(transaction);
-
-        TransactionExpenseDTO transactionExpenseDTO = new TransactionExpenseDTO();
-        transactionExpenseDTO.setExpenseId(expense.getId());
-        setTransactionExpense(transaction, transactionExpenseDTO);
+        try {
+            EExpense expense = event.getExpense();
+            TransactionDTO transactionDTO = new TransactionDTO();
+            transactionDTO.setAmount(expense.getAmount());
+            transactionDTO.setDescription(expense.getDescription() + String.format("- Expense id: %s", expense.getId()));
+            String reference = String.format("EXP%s", System.currentTimeMillis());
+            transactionDTO.setReference(reference);
+            Integer transactionTypeId = mainConfig.getTransaction().getType().getExpenseId();
+            transactionDTO.setTransactionTypeId(transactionTypeId);
+            TransactionExpenseDTO transactionExpenseDTO = new TransactionExpenseDTO();
+            transactionExpenseDTO.setExpenseId(expense.getId());
+            create(transactionDTO);
+        } catch (Exception e) {
+            logger.error("\n[LOCATION] - STransaction.handleExpenseCreated\n[CAUSE] {}\n[MSG] {}", e.getCause(), e.getMessage());
+        }
     }
 
     @EventListener

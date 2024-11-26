@@ -17,6 +17,11 @@ function formatDate(dateString) {
   return `${day}${getOrdinal(day)} ${month} ${year} ${hours}:${minutes}:${seconds}`;
 }
 
+function formatAmount(amountString) {
+  return new Intl.NumberFormat('en-US').format(amountString);
+}
+
 export default {
+  formatAmount,
   formatDate
 }

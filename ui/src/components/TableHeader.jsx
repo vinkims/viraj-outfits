@@ -13,7 +13,7 @@ const TableHeader = ({ headerLabel }) => {
         {headerLabel.map((headerCell) => (
           <TableCell
             key={headerCell.id}
-            sx={{ fontWeight: '600' }}
+            sx={{ fontWeight: '600', fontSize: '12px' }}
           >{headerCell.label}</TableCell>
         ))}
       </TableRow>
