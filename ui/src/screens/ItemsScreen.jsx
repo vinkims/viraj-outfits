@@ -551,16 +551,16 @@ const ItemsScreen = () => {
                   key={row.id}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell>{row.itemCode}</TableCell>
-                  <TableCell>{row.itemType.name}</TableCell>
-                  <TableCell>{row.name}</TableCell>
-                  <TableCell>{row.category.name}</TableCell>
-                  <TableCell>{row.color}</TableCell>
-                  <TableCell>{row.size}</TableCell>
-                  <TableCell>{FormattingUtils.formatDate(row.createdOn)}</TableCell>
-                  <TableCell>{row.price}</TableCell>
-                  <TableCell>{row.sellingPrice}</TableCell>
-                  <TableCell>{row.status.name}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{row.itemCode}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{row.itemType.name}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{row.name}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{row.category.name}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{row.color}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{row.size}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{FormattingUtils.formatDate(row.createdOn)}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{FormattingUtils.formatAmount(row.price)}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{row.sellingPrice}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{row.status.name}</TableCell>
                   <TableCell>
                     <Box>
                       <Button

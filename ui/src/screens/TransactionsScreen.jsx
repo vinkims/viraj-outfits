@@ -337,16 +337,16 @@ const TransactionsScreen = () => {
                   key={row.id}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell>{row.transactionCode}</TableCell>
-                  <TableCell>{row.amount}</TableCell>
-                  <TableCell>{FormattingUtils.formatDate(row.createdOn)}</TableCell>
-                  <TableCell>{row.description}</TableCell>
-                  <TableCell>{row.transactionType.name}</TableCell>
-                  <TableCell>{row.transactionSource?.name}</TableCell>
-                  <TableCell>{row.paymentChannel.name}</TableCell>
-                  <TableCell>{row.reference}</TableCell>
-                  <TableCell>{row.user.firstName + ' ' + row.user.lastName}</TableCell>
-                  <TableCell>{row.status.name}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{row.transactionCode}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{FormattingUtils.formatAmount(row.amount)}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{FormattingUtils.formatDate(row.createdOn)}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{row.description}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{row.transactionType.name}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{row.transactionSource?.name}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{row.paymentChannel.name}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{row.reference}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{row.user.firstName + ' ' + row.user.lastName}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{row.status.name}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

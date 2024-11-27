@@ -322,11 +322,11 @@ const CustomersScreen = () => {
                   key={row.id}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell>{row.firstName + ' ' + row.lastName}</TableCell>
-                  <TableCell>{row.mobileNumber}</TableCell>
-                  <TableCell>{row.email}</TableCell>
-                  <TableCell>{FormattingUtils.formatDate(row.createdOn)}</TableCell>
-                  <TableCell>{row.status.name}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{row.firstName + ' ' + row.lastName}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{row.mobileNumber}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{row.email}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{FormattingUtils.formatDate(row.createdOn)}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{row.status.name}</TableCell>
                   <TableCell>
                     <Box>
                       <Button

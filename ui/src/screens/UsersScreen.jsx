@@ -37,7 +37,6 @@ const UsersScreen = () => {
   const { showAlert } = useAlert();
   const { logout } = useAuth();
   const navigate = useNavigate();
-  const [ confirmPasswordTouched, setConfirmPasswordTouched ] = useState(false);
   const intitialUserForm = {
     firstName: '',
     lastName: '',
@@ -54,6 +53,7 @@ const UsersScreen = () => {
     password: false,
     confirmPassword: false
   };
+  const [ confirmPasswordTouched, setConfirmPasswordTouched ] = useState(false);
   const [ loading, setLoading ] = useState(false);
   const [ openAddUser, setOpenAddUser ] = useState(false);
   const [ pageNumber, setPageNumber ] = useState(0);
@@ -338,13 +338,13 @@ const UsersScreen = () => {
                   key={row.id}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell>{row.firstName + ' ' + row.lastName}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{row.firstName + ' ' + row.lastName}</TableCell>
                   {row.contacts.map((cont) => (
-                    <TableCell key={cont.id}>{cont.value}</TableCell>
+                    <TableCell key={cont.id} sx={{ fontSize: "13px" }}>{cont.value}</TableCell>
                   ))}
-                  <TableCell>{FormattingUtils.formatDate(row.createdOn)}</TableCell>
-                  <TableCell>{row.role.name}</TableCell>
-                  <TableCell>{row.status.name}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{FormattingUtils.formatDate(row.createdOn)}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{row.role.name}</TableCell>
+                  <TableCell sx={{ fontSize: "13px" }}>{row.status.name}</TableCell>
                   <TableCell>
                     <Box>
                       <Button
