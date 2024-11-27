@@ -125,7 +125,10 @@ const AppBarDrawer = () => {
   const theme = useTheme();
   const { logout } = useAuth();
   const [ anchorEl, setAnchorEl ] = useState(null);
-  const [ open, setOpen ] = useState(false);
+  const [ open, setOpen ] = useState(() => {
+    const savedState = localStorage.getItem("drawerOpen");
+    return savedState === "true";
+  });
 
   const MENU_ITEMS = [
     { label: "Dashboard", path: "/dashboard", icon:<DashboardIcon/> },
@@ -139,10 +142,12 @@ const AppBarDrawer = () => {
 
   const handleDrawerClose = () => {
     setOpen(false);
+    localStorage.setItem("drawerOpen", "false");
   }
 
   const handleDrawerOpen = () => {
     setOpen(true);
+    localStorage.setItem("drawerOpen", "true");
   }
 
   const handleLogout = () => {
