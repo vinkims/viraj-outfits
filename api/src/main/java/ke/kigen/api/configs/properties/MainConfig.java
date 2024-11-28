@@ -8,6 +8,7 @@ import ke.kigen.api.configs.properties.contact.ContactConfig;
 import ke.kigen.api.configs.properties.logging.LoggingConfig;
 import ke.kigen.api.configs.properties.payment_channel.PaymentChannelConfig;
 import ke.kigen.api.configs.properties.role.RoleConfig;
+import ke.kigen.api.configs.properties.sale.SaleConfig;
 import ke.kigen.api.configs.properties.security.SecurityConfig;
 import ke.kigen.api.configs.properties.status.StatusConfig;
 import ke.kigen.api.configs.properties.transaction.TransactionConfig;
@@ -29,6 +30,8 @@ public class MainConfig {
 
     private RoleConfig role;
 
+    private SaleConfig sale;
+
     private SecurityConfig security;
     
     private StatusConfig status;
@@ -43,6 +46,7 @@ public class MainConfig {
         setLogging(new LoggingConfig());
         setPaymentChannel(new PaymentChannelConfig());
         setRole(new RoleConfig());
+        setSale(new SaleConfig());
         setSecurity(new SecurityConfig());
         setStatus(new StatusConfig());
         setTransaction(new TransactionConfig());

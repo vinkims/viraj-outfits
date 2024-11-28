@@ -9,7 +9,7 @@ import java.io.Serializable;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "sales_types")
+@Entity(name = "sale_types")
 @Data
 @NoArgsConstructor
 public class ESaleType implements Serializable {
