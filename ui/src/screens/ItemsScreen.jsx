@@ -52,11 +52,27 @@ const ItemsScreen = () => {
     color: false,
     size: false,
     price: false
-  }
+  };
+  const initialItemSaleForm = {
+    sellingPrice: '',
+    saleType: null,
+    discount: '',
+    paymentChannel: null,
+    reference: ''
+  };
+  const initialItemSaleFormErrors = {
+    sellingPrice: false,
+    saleType: false,
+    discount: false,
+    paymentChannel: false,
+    reference: false
+  };
   const [ itemForm, setItemForm ] = useState(initialItemForm);
   const [ itemFormErrors, setItemFormErrors ] = useState(initialItemFormErrors);
   const [ itemId, setItemId ] = useState(null);
   const [ items, setItems ] = useState([]);
+  const [ itemSaleForm, setItemSaleForm ] = useState(initialItemSaleForm);
+  const [ itemSaleFormErrors, setItemSaleFormErrors ] = useState(initialItemSaleFormErrors);
   const [ itemTypeName, setItemTypeName ] = useState('');
   const [ itemTypeNameErrorText, setItemTypeNameErrorText ] = useState('');
   const [ itemTypes, setItemTypes ] = useState([]);
@@ -66,9 +82,13 @@ const ItemsScreen = () => {
   const [ openAddItem, setOpenAddItem ] = useState(false);
   const [ openAddItemType, setOpenAddItemType ] = useState(false);
   const [ openEditItem, setOpenEditItem ] = useState(false);
+  const [ openSellItem, setOpenSellItem ] = useState(false);
   const [ pageNumber, setPageNumber ] = useState(0);
   const [ pageSize, setPageSize ] = useState(10);
+  const [ paymentChannels, setPaymentChannels ] = useState([]);
+  const [ saleTypes, setSaleTypes ] = useState([]);
   const [ totalResults, setTotalResults ] = useState(0);
+  const inStockStatus = 10;
 
   const headerLabels = [
     { id: 'itemCode', label: 'Item Code' },
@@ -95,12 +115,25 @@ const ItemsScreen = () => {
   useEffect(() => {
     getCategories();
   }, []);
+
+  useEffect(() => {
+    getSaleTypes();
+  }, []);
+
+  useEffect(() => {
+    getPaymentChannels();
+  }, []);
   
   const clearFormDetails = () => {
     setItemForm(initialItemForm);
     setItemFormErrors(initialItemFormErrors);
     setNewItemForm(initialItemForm);
     setNewItemFormErrors(initialItemFormErrors);
+  }
+
+  const clearSaleFormDetails = () => {
+    setItemSaleForm(initialItemSaleForm);
+    setItemSaleFormErrors(initialItemSaleFormErrors);
   }
 
   const getCategories = async () => {
@@ -180,6 +213,56 @@ const ItemsScreen = () => {
     })
   }
 
+  const getPaymentChannels = async () => {
+    setLoading(true);
+
+    await ServerCommunicationUtils.get("payment/channel")
+    .then(res => {
+      if (res.status === 200) {
+        setLoading(false);
+        const formattedChannels = res.content.data
+          .filter((channel) => channel.id !== 3)
+          .map((channel) => ({ id: channel.id, label: channel.name}));
+        setPaymentChannels(formattedChannels);
+      } else {
+        setLoading(false);
+        showAlert('Error fetching payment channels', 'error');
+      }
+    })
+    .catch(error => {
+      console.error("Error: ", error);
+      setLoading(false);
+      let alertMsg = error.toString().includes('NetworkError when attempting to fetch resource')
+        ? 'Please check your internet connection.'
+        : 'Error fetching payment channels.';
+      showAlert(alertMsg, 'error');
+    })
+  }
+
+  const getSaleTypes = async () => {
+    setLoading(true);
+
+    await ServerCommunicationUtils.get("sale/type")
+    .then(res => {
+      if (res.status === 200) {
+        setLoading(false);
+        const formattedSaleTypes = res.content.data.map((type) => ({ id: type.id, label: type.name}));
+        setSaleTypes(formattedSaleTypes);
+      } else {
+        setLoading(false);
+        showAlert('Error fetching sale types', 'error');
+      }
+    })
+    .catch(error => {
+      console.error("Error: ", error);
+      setLoading(false);
+      let alertMsg = error.toString().includes('NetworkError when attempting to fetch resource')
+        ? 'Please check your internet connection.'
+        : 'Error fetching sale types.';
+      showAlert(alertMsg, 'error');
+    })
+  }
+
   const getUpdatedFields = () => {
     const updatedFields = {};
 
@@ -239,6 +322,14 @@ const ItemsScreen = () => {
     }
     setOpenEditItem(false);
     clearFormDetails();
+  }
+
+  const handleCloseSellItem = (event, reason) => {
+    if (reason === 'backdropClick') {
+      return;
+    }
+    setOpenSellItem(false);
+    clearSaleFormDetails();
   }
 
   const handleEditItem = (itemObj) => {
@@ -331,6 +422,29 @@ const ItemsScreen = () => {
     setPageSize(parseInt(event.target.value), 10);
   }
 
+  const handleSaleInputChange = (field) => (event) => {
+    const value = event.target.value;
+    setItemSaleForm((prevForm) => ({
+      ...prevForm,
+      [field]: value
+    }));
+    setItemSaleFormErrors((prevErrors) => ({
+      ...prevErrors,
+      [field]: false
+    }));
+  }
+
+  const handleSaleInputSelect = (field) => (_, event) => {
+    setItemSaleForm((prevForm) => ({
+      ...prevForm,
+      [field]: event
+    }));
+    setItemSaleFormErrors((prevErrors) => ({
+      ...prevErrors,
+      [field]: false
+    }));
+  }
+
   const handleSaveItem = async () => {
     if (!validateForm()) {
       return;
@@ -419,6 +533,51 @@ const ItemsScreen = () => {
       let alertMsg = error.toString().includes('NetworkError when attempting to fetch resource')
         ? 'Please check your internet connection.'
         : 'Error adding item type.';
+      showAlert(alertMsg, 'error');
+    })
+  }
+
+  const handleSellItem = (itemObj) => {
+    setOpenSellItem(true);
+    setItemId(itemObj.id);
+  }
+
+  const handleSubmitSellItem = async () => {
+    if (!validateSaleForm()) {
+      return;
+    }
+
+    let payload = {};
+    payload.amount = itemSaleForm.sellingPrice;
+    payload.itemId = itemId;
+    payload.paymentChannelId = itemSaleForm.paymentChannel?.id;
+    payload.saleTypeId = itemSaleForm.saleType?.id;
+
+    setLoading(true);
+
+    await ServerCommunicationUtils.post("sale", payload)
+    .then(res => {
+      if (res.status === 201) {
+        setLoading(false);
+        showAlert('Item sold successfully', 'success');
+        handleCloseSellItem();
+        getItems();
+      } else if (res.status === 403) {
+        logout();
+      } else {
+        const alertMsg = res.status === 500
+          ? 'Item could not be sold. Try again later.'
+          : res.detail;
+        setLoading(false);
+        showAlert(alertMsg, 'error');
+      }
+    })
+    .catch(error => {
+      console.error("Error: ", error);
+      setLoading(false);
+      let alertMsg = error.toString().includes('NetworkError when attempting to fetch resource')
+        ? 'Please check your internet connection.'
+        : 'Error selling item.';
       showAlert(alertMsg, 'error');
     })
   }
@@ -529,6 +688,23 @@ const ItemsScreen = () => {
     return Object.keys(errors).length === 0;
   }
 
+  const validateSaleForm = ()=> {
+    const errors = {};
+
+    if (!itemSaleForm.paymentChannel) {
+      errors.paymentChannel = true;
+    }
+    if (!itemSaleForm.saleType) {
+      errors.saleType = true;
+    }
+    if (!itemSaleForm.sellingPrice) {
+      errors.sellingPrice = true;
+    }
+
+    setItemSaleFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  }
+
   return (
     <Container sx={{ maxWidth: '100vw !important', justifyContent: 'center', paddingTop: "50px" }}>
       <Grid container spacing={2} sx={{ marginTop: '10px' }}>
@@ -572,14 +748,15 @@ const ItemsScreen = () => {
                         Edit
                       </Button>
 
-                      <Button
+                      {row.status.id === inStockStatus && <Button
                         variant="outlined"
                         color="success"
                         startIcon={<Iconify icon="eva:shopping-cart-fill" />}
                         sx={{ textTransform: 'none' }}
+                        onClick={() => handleSellItem(row)}
                       >
                         Sell
-                      </Button>
+                      </Button>}
                     </Box>
                   </TableCell>
                 </TableRow>
@@ -847,6 +1024,94 @@ const ItemsScreen = () => {
             handleCancel={handleCloseEditItem}
             submitTitle="Save"
             handleSubmit={handleUpdateItem}
+          />
+        </Dialog>
+
+        <Dialog
+          open={openSellItem}
+          onClose={handleCloseSellItem}
+          PaperProps={{ sx: { width: "400px" } }}
+        >
+          <DialogTitle>Sell Item</DialogTitle>
+          <DialogContent>
+            <Box display="flex" flexDirection="column" width="100%">
+              <Autocomplete
+                value={itemSaleForm.saleType}
+                onChange={handleSaleInputSelect('saleType')}
+                options={saleTypes}
+                sx={{ flex: 1 }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    margin="dense"
+                    variant="outlined"
+                    label="Sale Type"
+                    required
+                    error={itemSaleFormErrors.saleType}
+                    helperText={itemSaleFormErrors.saleType && 'Please select sale type'}
+                  />
+                )}
+              />
+              <Box display="flex" justifyContent="space-between" width="100%">
+                <TextField
+                  margin="dense"
+                  label="Selling Price"
+                  name="sellingPrice"
+                  required
+                  sx={{ flex: 1 }}
+                  error={itemSaleFormErrors.sellingPrice}
+                  helperText={itemSaleFormErrors.sellingPrice && 'Please enter selling price'}
+                  value={itemSaleForm.sellingPrice}
+                  onChange={handleSaleInputChange('sellingPrice')}
+                />
+                <TextField
+                  margin="dense"
+                  label="Discount"
+                  name="discount"
+                  sx={{ flex: 1, marginLeft: "10px" }}
+                  error={itemSaleFormErrors.discount}
+                  helperText={itemSaleFormErrors.discount && 'Please enter discount'}
+                  value={itemSaleForm.discount}
+                  onChange={handleSaleInputChange('discount')}
+                />
+              </Box>
+              <Autocomplete
+                value={itemSaleForm.paymentChannel}
+                onChange={handleSaleInputSelect('paymentChannel')}
+                options={paymentChannels}
+                sx={{ flex: 1 }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    margin="dense"
+                    variant="outlined"
+                    label="Payment Channel"
+                    required
+                    error={itemSaleFormErrors.paymentChannel}
+                    helperText={itemSaleFormErrors.paymentChannel && 'Please select payment channel'}
+                  />
+                )}
+              />
+              {itemSaleForm.paymentChannel && (itemSaleForm.paymentChannel.id === 2 || itemSaleForm.paymentChannel.id === 4) &&
+              <TextField
+                margin="dense"
+                label="Reference"
+                name="reference"
+                sx={{ flex: 1 }}
+                error={itemSaleFormErrors.reference}
+                helperText={itemSaleFormErrors.reference && 'Please enter reference'}
+                value={itemSaleForm.reference}
+                onChange={handleSaleInputChange('reference')}
+              />
+              }
+            </Box>
+          </DialogContent>
+          <DialogButtons
+            loading={loading}
+            cancelTitle="Cancel"
+            handleCancel={handleCloseSellItem}
+            submitTitle="Sell"
+            handleSubmit={handleSubmitSellItem}
           />
         </Dialog>
 

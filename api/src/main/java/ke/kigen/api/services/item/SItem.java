@@ -165,7 +165,7 @@ public class SItem implements IItem {
 
         EItem item = getById(itemId, true);
 
-        String[] fields = {"Color", "Name", "Price", "Size", "ItemCode"};
+        String[] fields = {"Color", "Name", "Price", "Size", "ItemCode", "SellingPrice"};
         for (String field : fields) {
             Method getField = ItemDTO.class.getMethod(String.format("get%s",field));
             Object fieldValue = getField.invoke(itemDTO);
@@ -180,6 +180,7 @@ public class SItem implements IItem {
         setImage(item, itemDTO.getImage());
         setItemType(item, itemDTO.getItemTypeId());
         setStatus(item, itemDTO.getStatusId());
+        item.setUpdatedOn(LocalDateTime.now());
 
         save(item);
         return item;

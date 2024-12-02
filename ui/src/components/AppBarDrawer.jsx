@@ -26,6 +26,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import PaymentIcon from '@mui/icons-material/Payment';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import SettingsIcon from '@mui/icons-material/Settings';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 import { useAuth } from "../contexts/Auth";
 
@@ -133,6 +134,7 @@ const AppBarDrawer = () => {
   const MENU_ITEMS = [
     { label: "Dashboard", path: "/dashboard", icon:<DashboardIcon/> },
     { label: "Items", path: "/items", icon: <CheckroomIcon/> },
+    { label: "Sales", path: "/sales", icon: <ShoppingCartIcon/> },
     { label: "Customers", path: "/customers", icon: <GroupIcon/> },
     { label: "Transactions", path: "/transactions", icon: <ReceiptIcon/> },
     { label: "Users", path: "/users", icon: <AssignmentIndIcon/> },

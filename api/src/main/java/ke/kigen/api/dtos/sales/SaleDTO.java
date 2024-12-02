@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import ke.kigen.api.dtos.customer.CustomerDTO;
 import ke.kigen.api.dtos.item.ItemDTO;
+import ke.kigen.api.dtos.payment.PaymentChannelDTO;
 import ke.kigen.api.dtos.payment.TransactionDTO;
 import ke.kigen.api.dtos.status.StatusDTO;
 import ke.kigen.api.dtos.user.UserDTO;
@@ -23,6 +24,8 @@ public class SaleDTO {
     private Integer saleTypeId;
 
     private String salesNumber;
+
+    private String reference;
 
     private BigDecimal amount;
 
@@ -46,6 +49,10 @@ public class SaleDTO {
 
     private Integer transactionId;
 
+    private PaymentChannelDTO paymentChannel;
+
+    private Integer paymentChannelId;
+
     private UserDTO user;
 
     private Integer userId;
@@ -66,6 +73,10 @@ public class SaleDTO {
             setItem(new ItemDTO(sale.getItem()));
         }
         setNetAmount(sale.getNetAmount());
+        if (sale.getPaymentChannel() != null) {
+            setPaymentChannel(new PaymentChannelDTO(sale.getPaymentChannel()));
+        }
+        setReference(sale.getReference());
         setSalesNumber(sale.getSalesNumber());
         setSaleType(new SaleTypeDTO(sale.getSaleType()));
         if (sale.getStatus() != null) {

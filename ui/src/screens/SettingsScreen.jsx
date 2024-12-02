@@ -33,6 +33,7 @@ const MenuCategories = [
   { id: "transactionTypes", btnName: "Transaction Type", label: "Transaction Types", endpoint: "transaction/type" },
   { id: "transactionSources", btnName: "Transaction Source", label: "Transaction Sources", endpoint: "transaction/source" },
   { id: "paymentChannels", btnName: "Payment Channel", label: "Payment Channels", endpoint: "payment/channel" },
+  { id: "saleTypes", btnName: "Sale Type", label: "Sale Types", endpoint: "sale/type" },
   { id: "roles", btnName: "Role", label: "Roles", endpoint: "role" },
   { id: "statuses", btnName: "Status", label: "Statuses", endpoint: "status" }
 ];

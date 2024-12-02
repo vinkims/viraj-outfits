@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import ke.kigen.api.models.customer.ECustomer;
 import ke.kigen.api.models.item.EItem;
+import ke.kigen.api.models.payment.EPaymentChannel;
 import ke.kigen.api.models.payment.ETransaction;
 import ke.kigen.api.models.status.EStatus;
 import ke.kigen.api.models.user.EUser;
@@ -52,6 +53,13 @@ public class ESale implements Serializable {
 
     @Column(name = "net_amount")
     private BigDecimal netAmount;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_channel_id", referencedColumnName = "id")
+    private EPaymentChannel paymentChannel;
+
+    @Column(name = "reference")
+    private String reference;
 
     @Column(name = "sales_number")
     private String salesNumber;

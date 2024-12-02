@@ -10,6 +10,7 @@ import {
   ExpensesScreen, 
   ItemsScreen, 
   LoginScreen, 
+  SalesScreen, 
   SettingsScreen, 
   TransactionsScreen, 
   UsersScreen 
@@ -44,6 +45,7 @@ const CustomersPage = sidebarPage(CustomersScreen);
 const DashboardPage = sidebarPage(DashboardScreen);
 const ExpensesPage = sidebarPage(ExpensesScreen);
 const ItemsPage = sidebarPage(ItemsScreen);
+const SalesPage = sidebarPage(SalesScreen);
 const SettingsPage = sidebarPage(SettingsScreen);
 const TransactionsPage = sidebarPage(TransactionsScreen);
 const UsersPage = sidebarPage(UsersScreen);
@@ -63,6 +65,7 @@ function App() {
             <Route path="/users" element={<PrivateRoute element={<UsersPage/>} />} />
             <Route path="/expenses" element={<PrivateRoute element={<ExpensesPage/>} />} />
             <Route path="/settings" element={<PrivateRoute element={<SettingsPage/>} />} />
+            <Route path="/sales" element={<PrivateRoute element={<SalesPage/>} />} />
           </Routes>
         </Router>
       </AlertProvider>
