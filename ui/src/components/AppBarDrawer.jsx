@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { 
   AppBar,
   Box,
@@ -22,6 +22,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import GroupIcon from "@mui/icons-material/Group";
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import MenuIcon from "@mui/icons-material/Menu";
 import PaymentIcon from '@mui/icons-material/Payment';
 import ReceiptIcon from '@mui/icons-material/Receipt';
@@ -123,6 +124,7 @@ const SideBar = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open' })
 
 const AppBarDrawer = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const theme = useTheme();
   const { logout } = useAuth();
   const [ anchorEl, setAnchorEl ] = useState(null);
@@ -139,6 +141,7 @@ const AppBarDrawer = () => {
     { label: "Transactions", path: "/transactions", icon: <ReceiptIcon/> },
     { label: "Users", path: "/users", icon: <AssignmentIndIcon/> },
     { label: "Expenses", path: "/expenses", icon: <PaymentIcon/> },
+    { label: "Profile", path: "/profile", icon: <ManageAccountsIcon/> },
     { label: "Settings", path: "/settings", icon: <SettingsIcon/> }
   ];
 
@@ -163,6 +166,11 @@ const AppBarDrawer = () => {
   const handleMenuClose = () => {
     setAnchorEl(null);
   }
+
+  const handleProfileOpen = () => {
+    handleMenuClose();
+    navigate("/profile");
+  };
 
   const renderMenuItem = ({ label, path, icon }) => (
     <ListItemButton
@@ -252,7 +260,7 @@ const AppBarDrawer = () => {
               open={Boolean(anchorEl)}
               onClose={handleMenuClose}
             >
-              <MenuItem>Profile</MenuItem>
+              <MenuItem onClick={handleProfileOpen}>Profile</MenuItem>
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
           </div>

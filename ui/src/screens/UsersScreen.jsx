@@ -339,9 +339,7 @@ const UsersScreen = () => {
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                   <TableCell sx={{ fontSize: "13px" }}>{row.firstName + ' ' + row.lastName}</TableCell>
-                  {row.contacts.map((cont) => (
-                    <TableCell key={cont.id} sx={{ fontSize: "13px" }}>{cont.value}</TableCell>
-                  ))}
+                  <TableCell sx={{ fontSize: "13px" }}>{row.contacts?.[0].value}</TableCell>
                   <TableCell sx={{ fontSize: "13px" }}>{FormattingUtils.formatDate(row.createdOn)}</TableCell>
                   <TableCell sx={{ fontSize: "13px" }}>{row.role.name}</TableCell>
                   <TableCell sx={{ fontSize: "13px" }}>{row.status.name}</TableCell>
@@ -351,6 +349,7 @@ const UsersScreen = () => {
                         variant="outlined"
                         startIcon={<Iconify icon="eva:edit-fill" />}
                         sx={{ marginRight: 2, textTransform: "none" }}
+                        size="small"
                       >
                         Edit
                       </Button>
@@ -359,6 +358,7 @@ const UsersScreen = () => {
                         color="error"
                         startIcon={<Iconify icon="eva:trash-2-outline" />}
                         sx={{ textTransform: "none" }}
+                        size="small"
                       >
                         Delete
                       </Button>
